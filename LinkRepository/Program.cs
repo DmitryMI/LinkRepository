@@ -16,25 +16,26 @@ namespace LinkRepository
         /// Главная точка входа для приложения.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            IRepository repository = new SqliteRepository("data.db");
-            repository.Load();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new RepositoryViewerForm(repository));
-        }
 
-        static void AddRandomRow(IRepository repository)
-        {
-            var row = repository.CreateLinkTableRow();
-            row.Uri = $"www.google{_rnd.Next()}.com";
-            row.Genre = $"Bullshit {_rnd.Next()}";
-            row.Comment = $"See genre {_rnd.Next()} ";
-            row.Score = _rnd.Next(0, 100);
-            row.IsAvailable = _rnd.Next(0, 2) != 0;
-            row.IsLoaded = _rnd.Next(0, 2) != 0;
+            Form startingForm;
+            if (args.Length != 0)
+            {
+                string dbPath = args[0];
+                IRepository repository = new SqliteRepository(dbPath);
+                repository.Load();
+                startingForm = new RepositoryViewerForm(repository);
+            }
+            else
+            {
+                startingForm = new RepositoryManagerForm();
+            }
+
+
+            Application.Run(startingForm);
         }
     }
 }

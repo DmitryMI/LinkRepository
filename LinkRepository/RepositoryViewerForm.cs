@@ -19,6 +19,7 @@ namespace LinkRepository
             InitializeComponent();
             _repository = repository;
             _repository.Load();
+            ExitFocusMode();
             UpdateDataView();
             ResizeTableView();
         }
@@ -95,6 +96,7 @@ namespace LinkRepository
             IsAvailableBox.Enabled = true;
             IsLoadedBox.Enabled = true;
             SaveChangesButton.Enabled = true;
+            ScoreBox.Enabled = true;
 
             int rowNumber = (int)viewRow.Cells[0].Value;
             var row = _repository[rowNumber];
@@ -116,6 +118,7 @@ namespace LinkRepository
             IsAvailableBox.Enabled = false;
             IsLoadedBox.Enabled = false;
             SaveChangesButton.Enabled = false;
+            ScoreBox.Enabled = false;
             
             UriBox.Clear();
             GenreBox.Clear();

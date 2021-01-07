@@ -76,6 +76,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RepositoryManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RepositoryManagerForm.Designer.cs">
+      <DependentUpon>RepositoryManagerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RepositoryViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +106,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RepositoryManagerForm.resx">
+      <DependentUpon>RepositoryManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RepositoryViewerForm.resx">
       <DependentUpon>RepositoryViewerForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -41,6 +41,9 @@
             this.IsLoadedBox = new System.Windows.Forms.CheckBox();
             this.DeleteSelectedButton = new System.Windows.Forms.Button();
             this.SaveChangesButton = new System.Windows.Forms.Button();
+            this.ScoreBox = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.LinkTableHeadersMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.LinkTableRowNumberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LinkTableIndexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LinkTableUriColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,13 +53,8 @@
             this.LinkTableIsAvailableColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.LinkTableIsLoadedColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.LinkTableThumbnailColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.ScoreBox = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.LinkTableHeadersMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.suckMyBallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).BeginInit();
-            this.LinkTableHeadersMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // LinkTableView
@@ -196,59 +194,6 @@
             this.SaveChangesButton.UseVisualStyleBackColor = true;
             this.SaveChangesButton.Click += new System.EventHandler(this.SaveChangesButton_Click);
             // 
-            // LinkTableRowNumberColumn
-            // 
-            this.LinkTableRowNumberColumn.HeaderText = "#";
-            this.LinkTableRowNumberColumn.Name = "LinkTableRowNumberColumn";
-            this.LinkTableRowNumberColumn.ReadOnly = true;
-            this.LinkTableRowNumberColumn.Width = 20;
-            // 
-            // LinkTableIndexColumn
-            // 
-            this.LinkTableIndexColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.LinkTableIndexColumn.HeaderText = "Index";
-            this.LinkTableIndexColumn.Name = "LinkTableIndexColumn";
-            this.LinkTableIndexColumn.ReadOnly = true;
-            this.LinkTableIndexColumn.Width = 58;
-            // 
-            // LinkTableUriColumn
-            // 
-            this.LinkTableUriColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LinkTableUriColumn.HeaderText = "URI";
-            this.LinkTableUriColumn.Name = "LinkTableUriColumn";
-            // 
-            // LinkTableGenreColumn
-            // 
-            this.LinkTableGenreColumn.HeaderText = "Genre";
-            this.LinkTableGenreColumn.Name = "LinkTableGenreColumn";
-            // 
-            // LinkTableScoreColumn
-            // 
-            this.LinkTableScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.LinkTableScoreColumn.HeaderText = "Score";
-            this.LinkTableScoreColumn.Name = "LinkTableScoreColumn";
-            this.LinkTableScoreColumn.Width = 60;
-            // 
-            // LinkTableCommentColumn
-            // 
-            this.LinkTableCommentColumn.HeaderText = "Comment";
-            this.LinkTableCommentColumn.Name = "LinkTableCommentColumn";
-            // 
-            // LinkTableIsAvailableColumn
-            // 
-            this.LinkTableIsAvailableColumn.HeaderText = "Is available";
-            this.LinkTableIsAvailableColumn.Name = "LinkTableIsAvailableColumn";
-            // 
-            // LinkTableIsLoadedColumn
-            // 
-            this.LinkTableIsLoadedColumn.HeaderText = "Is loaded";
-            this.LinkTableIsLoadedColumn.Name = "LinkTableIsLoadedColumn";
-            // 
-            // LinkTableThumbnailColumn
-            // 
-            this.LinkTableThumbnailColumn.HeaderText = "Thumbnail";
-            this.LinkTableThumbnailColumn.Name = "LinkTableThumbnailColumn";
-            // 
             // ScoreBox
             // 
             this.ScoreBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -270,17 +215,69 @@
             // 
             // LinkTableHeadersMenuStrip
             // 
-            this.LinkTableHeadersMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.suckMyBallsToolStripMenuItem});
             this.LinkTableHeadersMenuStrip.Name = "LinkTableHeadersMenuStrip";
-            this.LinkTableHeadersMenuStrip.Size = new System.Drawing.Size(147, 26);
+            this.LinkTableHeadersMenuStrip.Size = new System.Drawing.Size(61, 4);
             this.LinkTableHeadersMenuStrip.Text = "Columns";
             // 
-            // suckMyBallsToolStripMenuItem
+            // LinkTableRowNumberColumn
             // 
-            this.suckMyBallsToolStripMenuItem.Name = "suckMyBallsToolStripMenuItem";
-            this.suckMyBallsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.suckMyBallsToolStripMenuItem.Text = "Suck my balls";
+            this.LinkTableRowNumberColumn.HeaderText = "#";
+            this.LinkTableRowNumberColumn.Name = "LinkTableRowNumberColumn";
+            this.LinkTableRowNumberColumn.ReadOnly = true;
+            this.LinkTableRowNumberColumn.Width = 20;
+            // 
+            // LinkTableIndexColumn
+            // 
+            this.LinkTableIndexColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.LinkTableIndexColumn.HeaderText = "Index";
+            this.LinkTableIndexColumn.Name = "LinkTableIndexColumn";
+            this.LinkTableIndexColumn.ReadOnly = true;
+            this.LinkTableIndexColumn.Width = 58;
+            // 
+            // LinkTableUriColumn
+            // 
+            this.LinkTableUriColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LinkTableUriColumn.FillWeight = 10F;
+            this.LinkTableUriColumn.HeaderText = "URI";
+            this.LinkTableUriColumn.MinimumWidth = 50;
+            this.LinkTableUriColumn.Name = "LinkTableUriColumn";
+            // 
+            // LinkTableGenreColumn
+            // 
+            this.LinkTableGenreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LinkTableGenreColumn.FillWeight = 50F;
+            this.LinkTableGenreColumn.HeaderText = "Genre";
+            this.LinkTableGenreColumn.Name = "LinkTableGenreColumn";
+            // 
+            // LinkTableScoreColumn
+            // 
+            this.LinkTableScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LinkTableScoreColumn.HeaderText = "Score";
+            this.LinkTableScoreColumn.Name = "LinkTableScoreColumn";
+            this.LinkTableScoreColumn.Width = 60;
+            // 
+            // LinkTableCommentColumn
+            // 
+            this.LinkTableCommentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LinkTableCommentColumn.FillWeight = 50F;
+            this.LinkTableCommentColumn.HeaderText = "Comment";
+            this.LinkTableCommentColumn.Name = "LinkTableCommentColumn";
+            this.LinkTableCommentColumn.Width = 76;
+            // 
+            // LinkTableIsAvailableColumn
+            // 
+            this.LinkTableIsAvailableColumn.HeaderText = "Is available";
+            this.LinkTableIsAvailableColumn.Name = "LinkTableIsAvailableColumn";
+            // 
+            // LinkTableIsLoadedColumn
+            // 
+            this.LinkTableIsLoadedColumn.HeaderText = "Is loaded";
+            this.LinkTableIsLoadedColumn.Name = "LinkTableIsLoadedColumn";
+            // 
+            // LinkTableThumbnailColumn
+            // 
+            this.LinkTableThumbnailColumn.HeaderText = "Thumbnail";
+            this.LinkTableThumbnailColumn.Name = "LinkTableThumbnailColumn";
             // 
             // RepositoryViewerForm
             // 
@@ -307,7 +304,6 @@
             this.ResizeEnd += new System.EventHandler(this.RepositoryViewerForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).EndInit();
-            this.LinkTableHeadersMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -327,6 +323,9 @@
         private System.Windows.Forms.CheckBox IsLoadedBox;
         private System.Windows.Forms.Button DeleteSelectedButton;
         private System.Windows.Forms.Button SaveChangesButton;
+        private System.Windows.Forms.NumericUpDown ScoreBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ContextMenuStrip LinkTableHeadersMenuStrip;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableRowNumberColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableIndexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableUriColumn;
@@ -336,10 +335,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn LinkTableIsAvailableColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn LinkTableIsLoadedColumn;
         private System.Windows.Forms.DataGridViewImageColumn LinkTableThumbnailColumn;
-        private System.Windows.Forms.NumericUpDown ScoreBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ContextMenuStrip LinkTableHeadersMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem suckMyBallsToolStripMenuItem;
     }
 }
 
