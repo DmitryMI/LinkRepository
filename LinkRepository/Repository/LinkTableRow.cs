@@ -18,12 +18,15 @@ namespace LinkRepository.Repository
         private string _comment;
         private bool _isAvailable;
         private bool _isLoaded;
+        private DateTime _createdTimestamp;
+        private DateTime _modifiedTimestamp;
         private byte[] _thumbnailBytes;
 
-        internal LinkTableRow(int index, bool isNewRow, IModificationReporter modificationReporter = null)
+        internal LinkTableRow(int index, bool isNewRow, DateTime createdTimestamp, IModificationReporter modificationReporter = null)
         {
             _index = index;
             _isNewRow = isNewRow;
+            _createdTimestamp = createdTimestamp;
             _modificationReporter = modificationReporter;
         }
 
@@ -35,6 +38,19 @@ namespace LinkRepository.Repository
         internal void ResetNewRowFlag()
         {
             _isNewRow = false;
+        }
+
+        public DateTime CreatedTimestamp => _createdTimestamp;
+
+        public DateTime ModifiedTimestamp
+        {
+            get => _modifiedTimestamp;
+            set
+            {
+                _modifiedTimestamp = value;
+                _isModified = true;
+                _modificationReporter?.ReportModification(this);
+            }
         }
 
         public bool IsNewRow => _isNewRow;
@@ -87,5 +103,7 @@ namespace LinkRepository.Repository
             get => _thumbnailBytes;
             set { _thumbnailBytes = value; _isModified = true; _modificationReporter?.ReportModification(this); }
         }
+
+        
     }
 }

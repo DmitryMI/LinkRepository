@@ -224,6 +224,7 @@ namespace LinkRepository
                 return;
             }
             SaveChangesToRow(LinkTableView.SelectedRows[0]);
+            _repository.Save();
             UpdateDataView();
         }
 

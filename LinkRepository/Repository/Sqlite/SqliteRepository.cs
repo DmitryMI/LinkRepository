@@ -110,6 +110,8 @@ namespace LinkRepository.Repository.Sqlite
                     "Comment TEXT,\n" +
                     "IsAvailable INTEGER,\n" +
                     "IsLoaded INTEGER,\n" +
+                    "CreatedTimestamp INTEGER,\n"+
+                    "ModifiedTimestamp INTEGER,\n"+
                     "ThumbnailBytes BLOB\n" +
                  ");";
             
@@ -129,11 +131,26 @@ namespace LinkRepository.Repository.Sqlite
             string stm = "SELECT * FROM LinkTable";
             _sqliteConnection.Open();
             var cmd = new SqliteCommand(stm, _sqliteConnection);
+            int erroneousRowsCount = 0;
             using (SqliteDataReader rdr = cmd.ExecuteReader())
             {
                 while (rdr.Read())
                 {
-                    LinkTableRow row = new LinkTableRow(rdr.GetInt32(0), false, this)
+                    bool resetModifiedFlag = true;
+                    DateTime createDateTime = DateTime.Now;
+                    
+                    if (!rdr.IsDBNull(7))
+                    {
+                        long createdTimestamp = rdr.GetInt64(7);
+                        createDateTime = DateTime.FromBinary(createdTimestamp);
+                    }
+                    else
+                    {
+                        resetModifiedFlag = false;
+                        erroneousRowsCount++;
+                    }
+
+                    LinkTableRow row = new LinkTableRow(rdr.GetInt32(0), false, createDateTime, this)
                     {
                         Uri = rdr.GetString(1),
                         Genre = rdr.GetString(2),
@@ -143,21 +160,35 @@ namespace LinkRepository.Repository.Sqlite
                         IsLoaded = rdr.GetInt32(6) != 0,
                         ThumbnailBytes = null
                     };
-                    byte[] thumbnailData = null;
-                    object thumbnailObj = rdr.GetValue(7);
-                    /*
-                    var stream = rdr.GetStream(7);
-                    thumbnailData = new byte[stream.Length];
-                    stream.Read(thumbnailData, 0, thumbnailData.Length);
-                    row.ThumbnailBytes = thumbnailData;
-                    */
-                    row.ResetModifiedFlag();
+
+                    if (!rdr.IsDBNull(8))
+                    {
+                        long modifiedTimestamp = rdr.GetInt64(8);
+                        DateTime modifiedDateTime = DateTime.FromBinary(modifiedTimestamp);
+                        row.ModifiedTimestamp = modifiedDateTime;
+                    }
+                    else
+                    {
+                        DateTime modifiedDateTime = DateTime.Now;
+                        row.ModifiedTimestamp = modifiedDateTime;
+                        resetModifiedFlag = false;
+                        erroneousRowsCount++;
+                    }
+                    // TODO Thumbnail
+                    if (resetModifiedFlag)
+                    {
+                        row.ResetModifiedFlag();
+                    }
+
                     _rowList.Add(row);
                     Debug.WriteLine($"Row: {row.Index}, {row.IsAvailable}, {row.IsLoaded}");
                 }
             }
             _sqliteConnection.Close();
-            _hasUnsavedModifications = false;
+            if (erroneousRowsCount == 0)
+            {
+                _hasUnsavedModifications = false;
+            }
         }
 
         public void Load()
@@ -186,8 +217,8 @@ namespace LinkRepository.Repository.Sqlite
             _removedList.Clear();
 
             string insertCommandString =
-                $"INSERT INTO LinkTable(LinkIndex, Uri, Genre, Score, Comment, IsAvailable, IsLoaded)" +
-                $"VALUES(@index, @uri, @genre, @score, @comment, @isAvailable, @isLoaded)";
+                $"INSERT INTO LinkTable(LinkIndex, Uri, Genre, Score, Comment, IsAvailable, IsLoaded, CreatedTimestamp, ModifiedTimestamp)" +
+                $"VALUES(@index, @uri, @genre, @score, @comment, @isAvailable, @isLoaded, @createdTimestamp, @modifiedTimestamp)";
             SqliteCommand insertCommand = new SqliteCommand(insertCommandString, _sqliteConnection);
 
             string updateCommandString =
@@ -198,7 +229,9 @@ namespace LinkRepository.Repository.Sqlite
                 $"Score = @score,\n" +
                 $"Comment = @comment,\n" +
                 $"IsAvailable = @isAvailable,\n" +
-                $"IsLoaded = @isLoaded\n" +
+                $"IsLoaded = @isLoaded,\n" +
+                $"CreatedTimestamp = @createdTimestamp,\n" +
+                $"ModifiedTimestamp = @modifiedTimestamp\n" +
                 $"WHERE LinkIndex = @index";
             SqliteCommand updateCommand = new SqliteCommand(updateCommandString, _sqliteConnection);
 
@@ -219,6 +252,8 @@ namespace LinkRepository.Repository.Sqlite
                     insertCommand.Parameters.AddWithValue("@comment", row.Comment);
                     insertCommand.Parameters.AddWithValue("@isAvailable", SqliteUtils.BoolToInt(row.IsAvailable));
                     insertCommand.Parameters.AddWithValue("@isLoaded", SqliteUtils.BoolToInt(row.IsLoaded));
+                    insertCommand.Parameters.AddWithValue("@createdTimestamp", row.CreatedTimestamp.ToBinary());
+                    insertCommand.Parameters.AddWithValue("@modifiedTimestamp", row.ModifiedTimestamp.ToBinary());
 
                     rowsModified += insertCommand.ExecuteNonQuery();
                     
@@ -234,6 +269,8 @@ namespace LinkRepository.Repository.Sqlite
                     updateCommand.Parameters.AddWithValue("@comment", row.Comment);
                     updateCommand.Parameters.AddWithValue("@isAvailable", SqliteUtils.BoolToInt(row.IsAvailable));
                     updateCommand.Parameters.AddWithValue("@isLoaded", SqliteUtils.BoolToInt(row.IsLoaded));
+                    updateCommand.Parameters.AddWithValue("@createdTimestamp", row.CreatedTimestamp.ToBinary());
+                    updateCommand.Parameters.AddWithValue("@modifiedTimestamp", row.ModifiedTimestamp.ToBinary());
                     rowsModified += updateCommand.ExecuteNonQuery();
                 }
 
@@ -263,7 +300,7 @@ namespace LinkRepository.Repository.Sqlite
                 index = _rowList.Last().Index + 1;
             }
 
-            var row = new LinkTableRow(index, true, this);
+            var row = new LinkTableRow(index, true, DateTime.Now,this);
             _rowList.Add(row);
             return row;
         }

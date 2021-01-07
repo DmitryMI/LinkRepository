@@ -190,7 +190,7 @@
             this.SaveChangesButton.Name = "SaveChangesButton";
             this.SaveChangesButton.Size = new System.Drawing.Size(281, 23);
             this.SaveChangesButton.TabIndex = 11;
-            this.SaveChangesButton.Text = "Save";
+            this.SaveChangesButton.Text = "Save Row";
             this.SaveChangesButton.UseVisualStyleBackColor = true;
             this.SaveChangesButton.Click += new System.EventHandler(this.SaveChangesButton_Click);
             // 
