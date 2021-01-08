@@ -56,9 +56,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.LinkTableHeadersMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ThumbnailBox = new System.Windows.Forms.PictureBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.repositoryViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ThumbnailBox)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // LinkTableView
@@ -80,10 +87,10 @@
             this.LinkTableModifiedColumn,
             this.LinkTableThumbnailColumn});
             this.LinkTableView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.LinkTableView.Location = new System.Drawing.Point(12, 12);
+            this.LinkTableView.Location = new System.Drawing.Point(12, 29);
             this.LinkTableView.Name = "LinkTableView";
             this.LinkTableView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LinkTableView.Size = new System.Drawing.Size(829, 654);
+            this.LinkTableView.Size = new System.Drawing.Size(829, 637);
             this.LinkTableView.TabIndex = 0;
             this.LinkTableView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.LinkTableView_CellContentClick);
             this.LinkTableView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.LinkTableView_ColumnHeaderMouseClick);
@@ -325,11 +332,61 @@
             this.ThumbnailBox.TabStop = false;
             this.ThumbnailBox.DoubleClick += new System.EventHandler(this.ThumbnailBox_DoubleClick);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.repositoryViewerToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1138, 24);
+            this.menuStrip1.TabIndex = 15;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // repositoryViewerToolStripMenuItem
+            // 
+            this.repositoryViewerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesToolStripMenuItem,
+            this.reloadToolStripMenuItem,
+            this.saveChangesToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.repositoryViewerToolStripMenuItem.Name = "repositoryViewerToolStripMenuItem";
+            this.repositoryViewerToolStripMenuItem.Size = new System.Drawing.Size(112, 20);
+            this.repositoryViewerToolStripMenuItem.Text = "Repository viewer";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // preferencesToolStripMenuItem
+            // 
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.preferencesToolStripMenuItem.Text = "Preferences";
+            this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
+            // 
+            // saveChangesToolStripMenuItem
+            // 
+            this.saveChangesToolStripMenuItem.Name = "saveChangesToolStripMenuItem";
+            this.saveChangesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveChangesToolStripMenuItem.Text = "Save changes";
+            this.saveChangesToolStripMenuItem.Click += new System.EventHandler(this.saveChangesToolStripMenuItem_Click);
+            // 
+            // reloadToolStripMenuItem
+            // 
+            this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadToolStripMenuItem.Text = "Reload";
+            this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
+            // 
             // RepositoryViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1138, 678);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.ThumbnailBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.ScoreBox);
@@ -345,6 +402,7 @@
             this.Controls.Add(this.UriBox);
             this.Controls.Add(this.NewRowButton);
             this.Controls.Add(this.LinkTableView);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "RepositoryViewerForm";
             this.Text = "Repository viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RepositoryViewerForm_FormClosing);
@@ -353,6 +411,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ThumbnailBox)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,6 +447,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableCreatedColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableModifiedColumn;
         private System.Windows.Forms.DataGridViewImageColumn LinkTableThumbnailColumn;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem repositoryViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveChangesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
     }
 }
 

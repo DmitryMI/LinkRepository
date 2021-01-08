@@ -55,16 +55,29 @@ namespace LinkRepository
             }
         }
 
+        private void LoadTableFontSizeFromPreferences()
+        {
+            Font font = new Font(LinkTableView.Font.FontFamily, _preferences.LinkTableFontSize, LinkTableView.Font.Style);
+            LinkTableView.Font = font;
+        }
+
         private void SaveColumnsToPreferences()
         {
-            _preferences.VisibleColumns.Clear();
+            var list = new List<string>();
             foreach (DataGridViewColumn column in LinkTableView.Columns)
             {
                 if (column.Visible)
                 {
-                    _preferences.VisibleColumns.Add(column.Name);
+                    list.Add(column.Name);
                 }
             }
+
+            _preferences.VisibleColumns = list.ToArray();
+        }
+
+        private void SaveTableFontSizeToPreferences()
+        {
+            _preferences.LinkTableFontSize = LinkTableView.Font.Size;
         }
 
         private void LoadPreferences()
@@ -74,11 +87,13 @@ namespace LinkRepository
             {
                 LoadColumnsFromPreferences();
             }
+            LoadTableFontSizeFromPreferences();
         }
 
         private void SavePreferences()
         {
             SaveColumnsToPreferences();
+            SaveTableFontSizeToPreferences();
             _preferences.Serialize();
         }
 
@@ -300,6 +315,7 @@ namespace LinkRepository
             DeleteSelectedRows();
         }
 
+
         private void RepositoryViewerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_repository.HasUnsavedChanges)
@@ -474,6 +490,55 @@ namespace LinkRepository
             }
             SaveChangesToRow(LinkTableView.SelectedRows[0]);
             UpdateViewRow(LinkTableView.SelectedRows[0]);
+        }
+
+        private void saveChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _repository.Save();
+        }
+
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_repository.HasUnsavedChanges)
+            {
+                DialogResult result = MessageBox.Show("Save changes?", "Exiting", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        return;
+                        break;
+                    case DialogResult.Yes:
+                        _repository.Save();
+                        break;
+                    case DialogResult.No:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            _repository.Load();
+            ExitFocusMode();
+            UpdateDataView();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void PreferencesChangedEvent(PreferencesContainer preferencesContainer)
+        {
+            LoadTableFontSizeFromPreferences();
+        }
+
+        private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveTableFontSizeToPreferences();
+            PreferencesEditorForm preferencesEditor = new PreferencesEditorForm(_preferences);
+            _preferences.PreferencesChangedEvent += PreferencesChangedEvent;
+            preferencesEditor.ShowDialog();
+            _preferences.PreferencesChangedEvent -= PreferencesChangedEvent;
         }
     }
 }
