@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Preferences\PreferencesContainer.cs" />
     <Compile Include="RepositoryManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,9 +95,11 @@
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\LinkTableColumnAttribute.cs" />
     <Compile Include="Repository\LinkTableRow.cs" />
+    <Compile Include="Repository\RepositoryConstants.cs" />
     <Compile Include="Repository\Sqlite\ColumnMetadata.cs" />
     <Compile Include="Repository\Sqlite\SqliteRepository.cs" />
     <Compile Include="Repository\Sqlite\SqliteUtils.cs" />
+    <Compile Include="Utils\ImageUtils.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

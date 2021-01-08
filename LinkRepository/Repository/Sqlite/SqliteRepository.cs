@@ -158,10 +158,9 @@ namespace LinkRepository.Repository.Sqlite
                         Comment = rdr.GetString(4),
                         IsAvailable = rdr.GetInt32(5) != 0,
                         IsLoaded = rdr.GetInt32(6) != 0,
-                        ThumbnailBytes = null
                     };
 
-                    if (!rdr.IsDBNull(8))
+                    if (!rdr.IsDBNull(RepositoryConstants.ModifiedColumnIndex))
                     {
                         long modifiedTimestamp = rdr.GetInt64(8);
                         DateTime modifiedDateTime = DateTime.FromBinary(modifiedTimestamp);
@@ -174,7 +173,17 @@ namespace LinkRepository.Repository.Sqlite
                         resetModifiedFlag = false;
                         erroneousRowsCount++;
                     }
-                    // TODO Thumbnail
+
+                    if (!rdr.IsDBNull(RepositoryConstants.ThumbnailColumnIndex))
+                    {
+                        var dataStream = rdr.GetStream(RepositoryConstants.ThumbnailColumnIndex);
+                        byte[] dataBytes = new byte[dataStream.Length];
+                        dataStream.Read(dataBytes, 0, dataBytes.Length);
+                        dataStream.Close();
+                        dataStream.Dispose();
+                        row.ThumbnailBytes = dataBytes;
+                    }
+
                     if (resetModifiedFlag)
                     {
                         row.ResetModifiedFlag();
@@ -208,17 +217,14 @@ namespace LinkRepository.Repository.Sqlite
             {
                 foreach (var removedRow in _removedList)
                 {
-                    command.Parameters.Clear();
-                    command.Parameters.AddWithValue("@linkIndex", removedRow.Index);
-                    command.Prepare();
-                    rowsModified += command.ExecuteNonQuery();
+                    rowsModified += DeleteRow(removedRow, command);
                 }
             }
             _removedList.Clear();
 
             string insertCommandString =
-                $"INSERT INTO LinkTable(LinkIndex, Uri, Genre, Score, Comment, IsAvailable, IsLoaded, CreatedTimestamp, ModifiedTimestamp)" +
-                $"VALUES(@index, @uri, @genre, @score, @comment, @isAvailable, @isLoaded, @createdTimestamp, @modifiedTimestamp)";
+                $"INSERT INTO LinkTable(LinkIndex, Uri, Genre, Score, Comment, IsAvailable, IsLoaded, ThumbnailBytes, CreatedTimestamp, ModifiedTimestamp)" +
+                $"VALUES(@index, @uri, @genre, @score, @comment, @isAvailable, @isLoaded, @thumbnailBytes, @createdTimestamp, @modifiedTimestamp)";
             SqliteCommand insertCommand = new SqliteCommand(insertCommandString, _sqliteConnection);
 
             string updateCommandString =
@@ -244,37 +250,12 @@ namespace LinkRepository.Repository.Sqlite
 
                 if (row.IsNewRow)
                 {
-                    insertCommand.Parameters.Clear();
-                    insertCommand.Parameters.AddWithValue("@index", row.Index);
-                    insertCommand.Parameters.AddWithValue("@uri", row.Uri);
-                    insertCommand.Parameters.AddWithValue("@genre", row.Genre);
-                    insertCommand.Parameters.AddWithValue("@score", row.Score);
-                    insertCommand.Parameters.AddWithValue("@comment", row.Comment);
-                    insertCommand.Parameters.AddWithValue("@isAvailable", SqliteUtils.BoolToInt(row.IsAvailable));
-                    insertCommand.Parameters.AddWithValue("@isLoaded", SqliteUtils.BoolToInt(row.IsLoaded));
-                    insertCommand.Parameters.AddWithValue("@createdTimestamp", row.CreatedTimestamp.ToBinary());
-                    insertCommand.Parameters.AddWithValue("@modifiedTimestamp", row.ModifiedTimestamp.ToBinary());
-
-                    rowsModified += insertCommand.ExecuteNonQuery();
-                    
-                    row.ResetNewRowFlag();
+                    rowsModified += InsertRow(row, insertCommand);
                 }
                 else
                 {
-                    updateCommand.Parameters.Clear();
-                    updateCommand.Parameters.AddWithValue("@index", row.Index);
-                    updateCommand.Parameters.AddWithValue("@uri", row.Uri);
-                    updateCommand.Parameters.AddWithValue("@genre", row.Genre);
-                    updateCommand.Parameters.AddWithValue("@score", row.Score);
-                    updateCommand.Parameters.AddWithValue("@comment", row.Comment);
-                    updateCommand.Parameters.AddWithValue("@isAvailable", SqliteUtils.BoolToInt(row.IsAvailable));
-                    updateCommand.Parameters.AddWithValue("@isLoaded", SqliteUtils.BoolToInt(row.IsLoaded));
-                    updateCommand.Parameters.AddWithValue("@createdTimestamp", row.CreatedTimestamp.ToBinary());
-                    updateCommand.Parameters.AddWithValue("@modifiedTimestamp", row.ModifiedTimestamp.ToBinary());
-                    rowsModified += updateCommand.ExecuteNonQuery();
+                    rowsModified += UpdateRow(row, updateCommand);
                 }
-
-                row.ResetModifiedFlag();
             }
 
             insertCommand.Dispose();
@@ -283,6 +264,77 @@ namespace LinkRepository.Repository.Sqlite
             Debug.WriteLine($"Rows modified: {rowsModified}");
             _sqliteConnection.Close();
             _hasUnsavedModifications = false;
+        }
+
+        private int InsertRow(LinkTableRow row, SqliteCommand insertCommand)
+        {
+            insertCommand.Parameters.Clear();
+            insertCommand.Parameters.AddWithValue("@index", row.Index);
+            insertCommand.Parameters.AddWithValue("@uri", row.Uri);
+            insertCommand.Parameters.AddWithValue("@genre", row.Genre);
+            insertCommand.Parameters.AddWithValue("@score", row.Score);
+            insertCommand.Parameters.AddWithValue("@comment", row.Comment);
+            insertCommand.Parameters.AddWithValue("@isAvailable", SqliteUtils.BoolToInt(row.IsAvailable));
+            insertCommand.Parameters.AddWithValue("@isLoaded", SqliteUtils.BoolToInt(row.IsLoaded));
+            insertCommand.Parameters.AddWithValue("@thumbnailBytes", row.ThumbnailBytes);
+            insertCommand.Parameters.AddWithValue("@createdTimestamp", row.CreatedTimestamp.ToBinary());
+            insertCommand.Parameters.AddWithValue("@modifiedTimestamp", row.ModifiedTimestamp.ToBinary());
+
+            int rowsModified = insertCommand.ExecuteNonQuery();
+
+            row.ResetNewRowFlag();
+            row.ResetModifiedFlag();
+            return rowsModified;
+        }
+
+        private int UpdateRow(LinkTableRow row, SqliteCommand updateCommand)
+        {
+            updateCommand.Parameters.Clear();
+            updateCommand.Parameters.AddWithValue("@index", row.Index);
+            updateCommand.Parameters.AddWithValue("@uri", row.Uri);
+            updateCommand.Parameters.AddWithValue("@genre", row.Genre);
+            updateCommand.Parameters.AddWithValue("@score", row.Score);
+            updateCommand.Parameters.AddWithValue("@comment", row.Comment);
+            updateCommand.Parameters.AddWithValue("@isAvailable", SqliteUtils.BoolToInt(row.IsAvailable));
+            updateCommand.Parameters.AddWithValue("@isLoaded", SqliteUtils.BoolToInt(row.IsLoaded));
+            updateCommand.Parameters.AddWithValue("@createdTimestamp", row.CreatedTimestamp.ToBinary());
+            updateCommand.Parameters.AddWithValue("@modifiedTimestamp", row.ModifiedTimestamp.ToBinary());
+            int rowsModified = updateCommand.ExecuteNonQuery();
+
+            if (row.IsThumbnailModified)
+            {
+                UpdateThumbnailBlob(row);
+            }
+
+            row.ResetModifiedFlag();
+            return rowsModified;
+        }
+
+        private int UpdateThumbnailBlob(LinkTableRow row)
+        {
+            string updateCommandString =
+                $"UPDATE LinkTable\n" +
+                "SET\n" +
+                $"ThumbnailBytes = @thumbnailBytes\n" +
+                $"WHERE LinkIndex = @index";
+            SqliteCommand updateCommand = new SqliteCommand(updateCommandString, _sqliteConnection);
+            updateCommand.Prepare();
+            updateCommand.Parameters.Clear();
+            updateCommand.Parameters.AddWithValue("@index", row.Index);
+            updateCommand.Parameters.AddWithValue("@thumbnailBytes", row.ThumbnailBytes);
+            int rowsModified = updateCommand.ExecuteNonQuery();
+            updateCommand.Dispose();
+            row.ResetThumbnailModifiedFlag();
+            return rowsModified;
+        }
+
+        private int DeleteRow(LinkTableRow row, SqliteCommand deleteCommand)
+        {
+            deleteCommand.Parameters.Clear();
+            deleteCommand.Parameters.AddWithValue("@linkIndex", row.Index);
+            deleteCommand.Prepare();
+            int rowsModified = deleteCommand.ExecuteNonQuery();
+            return rowsModified;
         }
 
         public bool HasUnsavedChanges => _hasUnsavedModifications;

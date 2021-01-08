@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinkRepository.Repository
 {
@@ -11,6 +7,9 @@ namespace LinkRepository.Repository
         private bool _isModified = false;
         private bool _isNewRow = false;
         private int _index;
+
+        private bool _isThumbnailModified = false;
+
         private IModificationReporter _modificationReporter;
         private string _uri;
         private string _genre;
@@ -33,6 +32,12 @@ namespace LinkRepository.Repository
         internal void ResetModifiedFlag()
         {
             _isModified = false;
+            _isThumbnailModified = false;
+        }
+
+        internal void ResetThumbnailModifiedFlag()
+        {
+            _isThumbnailModified = false;
         }
 
         internal void ResetNewRowFlag()
@@ -101,9 +106,15 @@ namespace LinkRepository.Repository
         public byte[] ThumbnailBytes
         {
             get => _thumbnailBytes;
-            set { _thumbnailBytes = value; _isModified = true; _modificationReporter?.ReportModification(this); }
+            set
+            {
+                _thumbnailBytes = value;
+                _isModified = true;
+                _isThumbnailModified = true;
+                _modificationReporter?.ReportModification(this);
+            }
         }
 
-        
+        public bool IsThumbnailModified => _isThumbnailModified;
     }
 }

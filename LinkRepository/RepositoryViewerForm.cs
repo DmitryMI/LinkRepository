@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using LinkRepository.Preferences;
 using LinkRepository.Repository;
+using LinkRepository.Utils;
 
 namespace LinkRepository
 {
     public partial class RepositoryViewerForm : Form
     {
-        private IRepository _repository;
+        private readonly IRepository _repository;
+        private PreferencesContainer _preferences;
         public RepositoryViewerForm(IRepository repository)
         {
             InitializeComponent();
@@ -21,7 +20,129 @@ namespace LinkRepository
             _repository.Load();
             ExitFocusMode();
             UpdateDataView();
+            LoadPreferences();
             ResizeTableView();
+        }
+
+        private void LoadColumnsFromPreferences()
+        {
+            foreach (DataGridViewColumn column in LinkTableView.Columns)
+            {
+                column.Visible = false;
+            }
+            foreach (var columnName in _preferences.VisibleColumns)
+            {
+                var column = LinkTableView.Columns[columnName];
+                if (column != null)
+                {
+                    column.Visible = true;
+                }
+            }
+        }
+
+        private void SaveColumnsToPreferences()
+        {
+            _preferences.VisibleColumns.Clear();
+            foreach (DataGridViewColumn column in LinkTableView.Columns)
+            {
+                if (column.Visible)
+                {
+                    _preferences.VisibleColumns.Add(column.Name);
+                }
+            }
+        }
+
+        private void LoadPreferences()
+        {
+            _preferences = new PreferencesContainer("LinkRepository.xml");
+            if (_preferences.Deserialize())
+            {
+                LoadColumnsFromPreferences();
+            }
+        }
+
+        private void SavePreferences()
+        {
+            SaveColumnsToPreferences();
+            _preferences.Serialize();
+        }
+
+        private int GetRowRepositoryNumber(DataGridViewRow viewRow)
+        {
+            return (int) viewRow.Cells[0].Value;
+        }
+
+        private void CreateViewRow(DataGridViewRow viewRow, int repositoryNumber)
+        {
+            viewRow.Cells.Clear();
+            var row = _repository[repositoryNumber];
+            DataGridViewCell rowNumberCell = new DataGridViewTextBoxCell();
+            rowNumberCell.Value = repositoryNumber;
+            DataGridViewCell indexCell = new DataGridViewTextBoxCell();
+            indexCell.Value = row.Index;
+            DataGridViewCell uriCell = new DataGridViewTextBoxCell();
+            uriCell.Value = row.Uri;
+            DataGridViewCell genreCell = new DataGridViewTextBoxCell();
+            genreCell.Value = row.Genre;
+            DataGridViewCell scoreCell = new DataGridViewTextBoxCell();
+            scoreCell.Value = row.Score;
+            DataGridViewCell commentCell = new DataGridViewTextBoxCell();
+            commentCell.Value = row.Comment;
+            DataGridViewCell isAvailableCell = new DataGridViewCheckBoxCell();
+            isAvailableCell.Value = row.IsAvailable;
+            DataGridViewCell isLoadedCell = new DataGridViewCheckBoxCell();
+            isLoadedCell.Value = row.IsLoaded;
+
+            DataGridViewCell createdCell = new DataGridViewTextBoxCell();
+            createdCell.Value = row.CreatedTimestamp;
+            DataGridViewCell modifiedCell = new DataGridViewTextBoxCell();
+            modifiedCell.Value = row.ModifiedTimestamp;
+
+            DataGridViewCell thumbnailCell = new DataGridViewImageCell();
+            Image preview = GetPreviewImage(row.ThumbnailBytes);
+            thumbnailCell.Value = preview;
+
+            viewRow.Cells.Add(rowNumberCell);
+            viewRow.Cells.Add(indexCell);
+            viewRow.Cells.Add(uriCell);
+            viewRow.Cells.Add(genreCell);
+            viewRow.Cells.Add(scoreCell);
+            viewRow.Cells.Add(commentCell);
+            viewRow.Cells.Add(isAvailableCell);
+            viewRow.Cells.Add(isLoadedCell);
+            viewRow.Cells.Add(createdCell);
+            viewRow.Cells.Add(modifiedCell);
+            viewRow.Cells.Add(thumbnailCell);
+        }
+
+        private Image GetPreviewImage(byte[] sourceImageData)
+        {
+            Image sourceImage = ImageUtils.ImageFromBytes(sourceImageData);
+            Image preview = ImageUtils.ResizeImage(sourceImage, 128, 128);
+            return preview;
+        }
+
+        private void UpdateViewRow(DataGridViewRow viewRow)
+        {
+            int repositoryNumber = GetRowRepositoryNumber(viewRow);
+            var rowData = GetRowData(viewRow);
+
+            viewRow.Cells[0].Value = repositoryNumber;
+            viewRow.Cells[RepositoryConstants.IndexColumnIndex + 1].Value = rowData.Index;
+            viewRow.Cells[RepositoryConstants.UriColumnIndex + 1].Value = rowData.Uri;
+            viewRow.Cells[RepositoryConstants.GenreColumnIndex + 1].Value = rowData.Genre;
+            viewRow.Cells[RepositoryConstants.ScoreColumnIndex + 1].Value = rowData.Score;
+            viewRow.Cells[RepositoryConstants.CommentColumnIndex + 1].Value = rowData.Comment;
+            viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex + 1].Value = rowData.IsAvailable;
+            viewRow.Cells[RepositoryConstants.IsLoadedColumnIndex + 1].Value = rowData.IsLoaded;
+            viewRow.Cells[RepositoryConstants.CreatedColumnIndex + 1].Value = rowData.CreatedTimestamp;
+            viewRow.Cells[RepositoryConstants.ModifiedColumnIndex + 1].Value = rowData.ModifiedTimestamp;
+            viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex + 1].Value = ImageUtils.ImageFromBytes(rowData.ThumbnailBytes);
+
+            if (LinkTableView.SelectedRows.Contains(viewRow))
+            {
+                EnterFocusMode(viewRow);
+            }
         }
 
         private void UpdateDataView()
@@ -29,43 +150,14 @@ namespace LinkRepository
             LinkTableView.Rows.Clear();
             for (var index = 0; index < _repository.Count; index++)
             {
-                var row = _repository[index];
                 DataGridViewRow viewRow = new DataGridViewRow();
-                DataGridViewCell rowNumberCell = new DataGridViewTextBoxCell();
-                rowNumberCell.Value = index;
-                DataGridViewCell indexCell = new DataGridViewTextBoxCell();
-                indexCell.Value = row.Index;
-                DataGridViewCell uriCell = new DataGridViewTextBoxCell();
-                uriCell.Value = row.Uri;
-                DataGridViewCell genreCell = new DataGridViewTextBoxCell();
-                genreCell.Value = row.Genre;
-                DataGridViewCell scoreCell = new DataGridViewTextBoxCell();
-                scoreCell.Value = row.Score;
-                DataGridViewCell commentCell = new DataGridViewTextBoxCell();
-                commentCell.Value = row.Comment;
-                DataGridViewCell isAvailableCell = new DataGridViewCheckBoxCell();
-                isAvailableCell.Value = row.IsAvailable;
-                DataGridViewCell isLoadedCell = new DataGridViewCheckBoxCell();
-                isLoadedCell.Value = row.IsLoaded;
-                DataGridViewCell thumbnailCell = new DataGridViewImageCell();
-                // TODO Set image
-                viewRow.Cells.Add(rowNumberCell);
-                viewRow.Cells.Add(indexCell);
-                viewRow.Cells.Add(uriCell);
-                viewRow.Cells.Add(genreCell);
-                viewRow.Cells.Add(scoreCell);
-                viewRow.Cells.Add(commentCell);
-                viewRow.Cells.Add(isAvailableCell);
-                viewRow.Cells.Add(isLoadedCell);
-                viewRow.Cells.Add(thumbnailCell);
-
+                CreateViewRow(viewRow, index);
                 LinkTableView.Rows.Add(viewRow);
             }
         }
 
         private void DeleteRow(DataGridViewRow viewRow)
         {
-            //LinkTableView.Rows.Remove(viewRow);
             int rowNumber = (int)viewRow.Cells[0].Value;
             _repository.RemoveAt(rowNumber);
         }
@@ -88,6 +180,13 @@ namespace LinkRepository
             UpdateDataView();
         }
 
+        private LinkTableRow GetRowData(DataGridViewRow viewRow)
+        {
+            int rowNumber = (int)viewRow.Cells[0].Value;
+            var row = _repository[rowNumber];
+            return row;
+        }
+
         private void EnterFocusMode(DataGridViewRow viewRow)
         {
             UriBox.Enabled = true;
@@ -97,9 +196,9 @@ namespace LinkRepository
             IsLoadedBox.Enabled = true;
             SaveChangesButton.Enabled = true;
             ScoreBox.Enabled = true;
+            ThumbnailBox.Enabled = true;
 
-            int rowNumber = (int)viewRow.Cells[0].Value;
-            var row = _repository[rowNumber];
+            var row = GetRowData(viewRow);
 
             UriBox.Text = row.Uri;
             GenreBox.Text = row.Genre;
@@ -107,6 +206,8 @@ namespace LinkRepository
             IsAvailableBox.Checked = row.IsAvailable;
             IsLoadedBox.Checked = row.IsLoaded;
             ScoreBox.Value = row.Score;
+            //ThumbnailBox.Image = (Image)viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex + 1].Value;
+            ThumbnailBox.Image = ImageUtils.ImageFromBytes(row.ThumbnailBytes);
         }
     
 
@@ -119,6 +220,7 @@ namespace LinkRepository
             IsLoadedBox.Enabled = false;
             SaveChangesButton.Enabled = false;
             ScoreBox.Enabled = false;
+            ThumbnailBox.Image = null;
             
             UriBox.Clear();
             GenreBox.Clear();
@@ -126,6 +228,7 @@ namespace LinkRepository
             ScoreBox.Value = 0;
             IsAvailableBox.Checked = false;
             IsLoadedBox.Checked = false;
+            ThumbnailBox.Enabled = false;
         }
 
         private void LinkTableView_SelectionChanged(object sender, EventArgs e)
@@ -215,6 +318,8 @@ namespace LinkRepository
             row.IsAvailable = IsAvailableBox.Checked;
             row.IsLoaded = IsLoadedBox.Checked;
             row.Score = (int)ScoreBox.Value;
+            row.ModifiedTimestamp = DateTime.Now;
+            row.ThumbnailBytes = ImageUtils.ImageToBytes(ThumbnailBox.Image);
         }
 
         private void SaveChangesButton_Click(object sender, EventArgs e)
@@ -225,7 +330,8 @@ namespace LinkRepository
             }
             SaveChangesToRow(LinkTableView.SelectedRows[0]);
             _repository.Save();
-            UpdateDataView();
+            UpdateViewRow(LinkTableView.SelectedRows[0]);
+            //UpdateDataView();
         }
 
         private void UriBox_DoubleClick(object sender, EventArgs e)
@@ -273,6 +379,47 @@ namespace LinkRepository
 
             GenerateLinkTableHeadersMenuStrip();
             LinkTableHeadersMenuStrip.Show(pos);
+        }
+
+        private void LinkTableView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+            {
+                return;
+            }
+            DataGridViewRow viewRow = LinkTableView.Rows[e.RowIndex];
+            LinkTableRow rowData = GetRowData(viewRow);
+            int rowNumber = GetRowRepositoryNumber(viewRow);
+            DataGridViewCell cell = viewRow.Cells[e.ColumnIndex];
+            if (e.ColumnIndex == RepositoryConstants.IsAvailableColumnIndex + 1)
+            {
+                var checkboxCell = (DataGridViewCheckBoxCell)cell;
+                bool value = !(bool)checkboxCell.Value;
+                rowData.IsAvailable = value;
+                UpdateViewRow(viewRow);
+                _repository.Save();
+            }
+            else if (e.ColumnIndex == RepositoryConstants.IsLoadedColumnIndex + 1)
+            {
+                var checkboxCell = (DataGridViewCheckBoxCell)cell;
+                bool value = !(bool)checkboxCell.Value;
+                rowData.IsLoaded = value;
+                UpdateViewRow(viewRow);
+                _repository.Save();
+            }
+        }
+
+        private void ThumbnailBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsImage())
+            {
+                ThumbnailBox.Image = Clipboard.GetImage();
+            }
+        }
+
+        private void RepositoryViewerForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            SavePreferences();
         }
     }
 }
