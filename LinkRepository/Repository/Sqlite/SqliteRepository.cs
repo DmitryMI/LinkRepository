@@ -30,7 +30,7 @@ namespace LinkRepository.Repository.Sqlite
             _sqliteConnection.Dispose();
         }
 
-        public IEnumerator<LinkTableRow> GetEnumerator()
+        public IEnumerator<ILinkTableRow> GetEnumerator()
         {
             return _rowList.GetEnumerator();
         }
@@ -40,10 +40,10 @@ namespace LinkRepository.Repository.Sqlite
             return ((IEnumerable) _rowList).GetEnumerator();
         }
 
-        public void Add(LinkTableRow item)
+        public void Add(ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _rowList.Add(item);
+            _rowList.Add((LinkTableRow)item);
         }
 
         public void Clear()
@@ -53,36 +53,36 @@ namespace LinkRepository.Repository.Sqlite
             _rowList.Clear();
         }
 
-        public bool Contains(LinkTableRow item)
+        public bool Contains(ILinkTableRow item)
         {
             return _rowList.Contains(item);
         }
 
-        public void CopyTo(LinkTableRow[] array, int arrayIndex)
+        public void CopyTo(ILinkTableRow[] array, int arrayIndex)
         {
-            _rowList.CopyTo(array, arrayIndex);
+            _rowList.CopyTo((LinkTableRow[])array, arrayIndex);
         }
 
-        public bool Remove(LinkTableRow item)
+        public bool Remove(ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _removedList.Add(item);
-            return _rowList.Remove(item);
+            _removedList.Add((LinkTableRow)item);
+            return _rowList.Remove((LinkTableRow)item);
         }
 
         public int Count => _rowList.Count;
 
         public bool IsReadOnly => false;
 
-        public int IndexOf(LinkTableRow item)
+        public int IndexOf(ILinkTableRow item)
         {
-            return _rowList.IndexOf(item);
+            return _rowList.IndexOf((LinkTableRow)item);
         }
 
-        public void Insert(int index, LinkTableRow item)
+        public void Insert(int index, ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _rowList.Insert(index, item);
+            _rowList.Insert(index, (LinkTableRow)item);
         }
 
         public void RemoveAt(int index)
@@ -92,10 +92,10 @@ namespace LinkRepository.Repository.Sqlite
             _rowList.RemoveAt(index);
         }
 
-        public LinkTableRow this[int index]
+        public ILinkTableRow this[int index]
         {
             get => _rowList[index];
-            set => _rowList[index] = value;
+            set => _rowList[index] = (LinkTableRow)value;
         }
 
         private void CreateLinkTable()
@@ -339,7 +339,7 @@ namespace LinkRepository.Repository.Sqlite
 
         public bool HasUnsavedChanges => _hasUnsavedModifications;
 
-        public LinkTableRow CreateLinkTableRow()
+        public ILinkTableRow CreateLinkTableRow()
         {
             if (_rowList == null)
             {

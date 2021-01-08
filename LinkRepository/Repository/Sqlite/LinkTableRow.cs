@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace LinkRepository.Repository
+namespace LinkRepository.Repository.Sqlite
 {
-    public class LinkTableRow
+    class LinkTableRow : ILinkTableRow
     {
         private bool _isModified = false;
         private bool _isNewRow = false;

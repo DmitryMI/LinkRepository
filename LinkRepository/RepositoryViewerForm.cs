@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LinkRepository.Preferences;
 using LinkRepository.Repository;
+using LinkRepository.Repository.Sqlite;
 using LinkRepository.Utils;
 
 namespace LinkRepository
@@ -224,7 +225,7 @@ namespace LinkRepository
             UpdateDataView();
         }
 
-        private LinkTableRow GetRowData(DataGridViewRow viewRow)
+        private ILinkTableRow GetRowData(DataGridViewRow viewRow)
         {
             int rowNumber = (int)viewRow.Cells[0].Value;
             var row = _repository[rowNumber];
@@ -438,7 +439,7 @@ namespace LinkRepository
                 return;
             }
             DataGridViewRow viewRow = LinkTableView.Rows[e.RowIndex];
-            LinkTableRow rowData = GetRowData(viewRow);
+            ILinkTableRow rowData = GetRowData(viewRow);
             int rowNumber = GetRowRepositoryNumber(viewRow);
             DataGridViewCell cell = viewRow.Cells[e.ColumnIndex];
             if (e.ColumnIndex == RepositoryConstants.IsAvailableColumnIndex + 1)

@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repository\ILinkTableRow.cs" />
     <Compile Include="PreferencesEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,9 +131,8 @@
     <Compile Include="Repository\IModificationReporter.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\LinkTableColumnAttribute.cs" />
-    <Compile Include="Repository\LinkTableRow.cs" />
+    <Compile Include="Repository\Sqlite\LinkTableRow.cs" />
     <Compile Include="Repository\RepositoryConstants.cs" />
-    <Compile Include="Repository\Sqlite\ColumnMetadata.cs" />
     <Compile Include="Repository\Sqlite\SqliteRepository.cs" />
     <Compile Include="Repository\Sqlite\SqliteUtils.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
@@ -154,7 +154,6 @@
     <EmbeddedResource Include="RepositoryViewerForm.resx">
       <DependentUpon>RepositoryViewerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="LinkRepository_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
