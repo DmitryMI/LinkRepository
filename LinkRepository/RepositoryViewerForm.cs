@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,6 +14,7 @@ namespace LinkRepository
     {
         private readonly IRepository _repository;
         private PreferencesContainer _preferences;
+        private bool _ignoreFocusModeChanges = true;
         public RepositoryViewerForm(IRepository repository)
         {
             InitializeComponent();
@@ -22,6 +24,19 @@ namespace LinkRepository
             UpdateDataView();
             LoadPreferences();
             ResizeTableView();
+            SetupDefaultSorting();
+
+            LinkTableView.ClearSelection();
+        }
+
+        private void SetupDefaultSorting()
+        {
+            var column = LinkTableView.Columns[RepositoryConstants.ScoreColumnIndex + 1];
+            if (column == null)
+            {
+                return;
+            }
+            LinkTableView.Sort(column, ListSortDirection.Descending);
         }
 
         private void LoadColumnsFromPreferences()
@@ -72,6 +87,15 @@ namespace LinkRepository
             return (int) viewRow.Cells[0].Value;
         }
 
+        private void DecorateRow(DataGridViewRow viewRow)
+        {
+            bool isAvailable = (bool) viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex + 1].Value;
+            if (!isAvailable)
+            {
+                viewRow.DefaultCellStyle.BackColor = Color.Red;
+            }
+        }
+
         private void CreateViewRow(DataGridViewRow viewRow, int repositoryNumber)
         {
             viewRow.Cells.Clear();
@@ -113,17 +137,20 @@ namespace LinkRepository
             viewRow.Cells.Add(createdCell);
             viewRow.Cells.Add(modifiedCell);
             viewRow.Cells.Add(thumbnailCell);
+
+            DecorateRow(viewRow);
         }
 
         private Image GetPreviewImage(byte[] sourceImageData)
         {
             Image sourceImage = ImageUtils.ImageFromBytes(sourceImageData);
-            Image preview = ImageUtils.ResizeImage(sourceImage, 128, 128);
+            Image preview = ImageUtils.ResizeImage(sourceImage, 160, 90);
             return preview;
         }
 
         private void UpdateViewRow(DataGridViewRow viewRow)
         {
+            _ignoreFocusModeChanges = true;
             int repositoryNumber = GetRowRepositoryNumber(viewRow);
             var rowData = GetRowData(viewRow);
 
@@ -137,12 +164,14 @@ namespace LinkRepository
             viewRow.Cells[RepositoryConstants.IsLoadedColumnIndex + 1].Value = rowData.IsLoaded;
             viewRow.Cells[RepositoryConstants.CreatedColumnIndex + 1].Value = rowData.CreatedTimestamp;
             viewRow.Cells[RepositoryConstants.ModifiedColumnIndex + 1].Value = rowData.ModifiedTimestamp;
-            viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex + 1].Value = ImageUtils.ImageFromBytes(rowData.ThumbnailBytes);
-
+            viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex + 1].Value = GetPreviewImage(rowData.ThumbnailBytes);
+            DecorateRow(viewRow);
             if (LinkTableView.SelectedRows.Contains(viewRow))
             {
                 EnterFocusMode(viewRow);
             }
+
+            _ignoreFocusModeChanges = false;
         }
 
         private void UpdateDataView()
@@ -189,6 +218,7 @@ namespace LinkRepository
 
         private void EnterFocusMode(DataGridViewRow viewRow)
         {
+            _ignoreFocusModeChanges = true;
             UriBox.Enabled = true;
             GenreBox.Enabled = true;
             CommentBox.Enabled = true;
@@ -206,13 +236,15 @@ namespace LinkRepository
             IsAvailableBox.Checked = row.IsAvailable;
             IsLoadedBox.Checked = row.IsLoaded;
             ScoreBox.Value = row.Score;
-            //ThumbnailBox.Image = (Image)viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex + 1].Value;
             ThumbnailBox.Image = ImageUtils.ImageFromBytes(row.ThumbnailBytes);
+            _ignoreFocusModeChanges = false;
         }
     
 
         private void ExitFocusMode()
         {
+            _ignoreFocusModeChanges = true;
+
             UriBox.Enabled = false;
             GenreBox.Enabled = false;
             CommentBox.Enabled = false;
@@ -229,6 +261,8 @@ namespace LinkRepository
             IsAvailableBox.Checked = false;
             IsLoadedBox.Checked = false;
             ThumbnailBox.Enabled = false;
+
+            _ignoreFocusModeChanges = false;
         }
 
         private void LinkTableView_SelectionChanged(object sender, EventArgs e)
@@ -411,15 +445,35 @@ namespace LinkRepository
 
         private void ThumbnailBox_DoubleClick(object sender, EventArgs e)
         {
+            if (LinkTableView.SelectedRows.Count != 1)
+            {
+                return;
+            }
             if (Clipboard.ContainsImage())
             {
                 ThumbnailBox.Image = Clipboard.GetImage();
+                SaveChangesToRow(LinkTableView.SelectedRows[0]);
+                UpdateViewRow(LinkTableView.SelectedRows[0]);
             }
         }
 
         private void RepositoryViewerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             SavePreferences();
+        }
+
+        private void FocusModeValuesChanged(object sender, EventArgs args)
+        {
+            if (LinkTableView.SelectedRows.Count != 1)
+            {
+                return;
+            }
+            if (_ignoreFocusModeChanges)
+            {
+                return;
+            }
+            SaveChangesToRow(LinkTableView.SelectedRows[0]);
+            UpdateViewRow(LinkTableView.SelectedRows[0]);
         }
     }
 }

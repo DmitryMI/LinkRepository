@@ -20,6 +20,12 @@ namespace LinkRepository.Utils
             {
                 return null;
             }
+
+            if (imageBytes.Length == 0)
+            {
+                return null;
+            }
+
             MemoryStream ms = new MemoryStream(imageBytes);
             Image image = Image.FromStream(ms);
             ms.Close();

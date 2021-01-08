@@ -186,6 +186,7 @@
             this.UriBox.Name = "UriBox";
             this.UriBox.Size = new System.Drawing.Size(281, 60);
             this.UriBox.TabIndex = 2;
+            this.UriBox.TextChanged += new System.EventHandler(this.FocusModeValuesChanged);
             this.UriBox.DoubleClick += new System.EventHandler(this.UriBox_DoubleClick);
             // 
             // label1
@@ -215,6 +216,7 @@
             this.GenreBox.Name = "GenreBox";
             this.GenreBox.Size = new System.Drawing.Size(281, 20);
             this.GenreBox.TabIndex = 4;
+            this.GenreBox.TextChanged += new System.EventHandler(this.FocusModeValuesChanged);
             // 
             // label3
             // 
@@ -234,6 +236,7 @@
             this.CommentBox.Name = "CommentBox";
             this.CommentBox.Size = new System.Drawing.Size(281, 60);
             this.CommentBox.TabIndex = 6;
+            this.CommentBox.TextChanged += new System.EventHandler(this.FocusModeValuesChanged);
             // 
             // IsAvailableBox
             // 
@@ -246,6 +249,7 @@
             this.IsAvailableBox.TabIndex = 8;
             this.IsAvailableBox.Text = "Is available";
             this.IsAvailableBox.UseVisualStyleBackColor = true;
+            this.IsAvailableBox.CheckedChanged += new System.EventHandler(this.FocusModeValuesChanged);
             // 
             // IsLoadedBox
             // 
@@ -258,6 +262,7 @@
             this.IsLoadedBox.TabIndex = 9;
             this.IsLoadedBox.Text = "Is loaded";
             this.IsLoadedBox.UseVisualStyleBackColor = true;
+            this.IsLoadedBox.CheckedChanged += new System.EventHandler(this.FocusModeValuesChanged);
             // 
             // DeleteSelectedButton
             // 
@@ -290,6 +295,7 @@
             this.ScoreBox.Name = "ScoreBox";
             this.ScoreBox.Size = new System.Drawing.Size(120, 26);
             this.ScoreBox.TabIndex = 12;
+            this.ScoreBox.ValueChanged += new System.EventHandler(this.FocusModeValuesChanged);
             // 
             // label4
             // 
@@ -310,6 +316,7 @@
             // ThumbnailBox
             // 
             this.ThumbnailBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ThumbnailBox.BackColor = System.Drawing.Color.White;
             this.ThumbnailBox.Location = new System.Drawing.Point(847, 302);
             this.ThumbnailBox.Name = "ThumbnailBox";
             this.ThumbnailBox.Size = new System.Drawing.Size(275, 275);
