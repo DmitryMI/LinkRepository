@@ -2,13 +2,12 @@
 using System.Windows.Forms;
 using LinkRepository.Repository;
 using LinkRepository.Repository.Sqlite;
+using LinkRepository.Repository.SqliteEf;
 
 namespace LinkRepository
 {
     static class Program
     {
-        private static Random _rnd = new Random();
-
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -22,7 +21,8 @@ namespace LinkRepository
             if (args.Length != 0)
             {
                 string dbPath = args[0];
-                IRepository repository = new SqliteRepository(dbPath);
+                //IRepository repository = new SqliteRepository(dbPath);
+                IRepository repository = new SqliteDbContext(dbPath);
                 repository.Load();
                 startingForm = new RepositoryViewerForm(repository);
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LinkRepository.Repository.Sqlite;
 
 namespace LinkRepository.Repository
@@ -10,5 +11,7 @@ namespace LinkRepository.Repository
         void Save();
         bool HasUnsavedChanges { get; }
         ILinkTableRow CreateLinkTableRow();
+
+
     }
 }
