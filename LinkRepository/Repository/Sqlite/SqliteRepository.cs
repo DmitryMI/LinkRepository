@@ -76,26 +76,32 @@ namespace LinkRepository.Repository.Sqlite
 
         public int IndexOf(ILinkTableRow item)
         {
-            return _rowList.IndexOf((SqliteLinkTableRow)item);
+            if (item == null)
+            {
+                return -1;
+            }
+            return item.Index;
         }
 
         public void Insert(int index, ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _rowList.Insert(index, (SqliteLinkTableRow)item);
+            _rowList.Remove(_rowList.First(e => e.Index == index));
+            _rowList.Add((SqliteLinkTableRow)item);
         }
 
         public void RemoveAt(int index)
         {
+            var item = _rowList.First(e => e.Index == index);
             _hasUnsavedModifications = true;
-            _removedList.Add(_rowList[index]);
-            _rowList.RemoveAt(index);
+            _removedList.Add(item);
+            _rowList.Remove(item);
         }
 
         public ILinkTableRow this[int index]
         {
-            get => _rowList[index];
-            set => _rowList[index] = (SqliteLinkTableRow)value;
+            get => _rowList.First(e => e.Index == index);
+            set => Insert(index, value);
         }
 
         private void CreateLinkTable()

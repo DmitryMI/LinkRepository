@@ -32,7 +32,7 @@ namespace LinkRepository
 
         private void SetupDefaultSorting()
         {
-            var column = LinkTableView.Columns[RepositoryConstants.ScoreColumnIndex + 1];
+            var column = LinkTableView.Columns[RepositoryConstants.ScoreColumnIndex];
             if (column == null)
             {
                 return;
@@ -105,7 +105,7 @@ namespace LinkRepository
 
         private void DecorateRow(DataGridViewRow viewRow)
         {
-            bool isAvailable = (bool) viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex + 1].Value;
+            bool isAvailable = (bool) viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex ].Value;
             if (!isAvailable)
             {
                 viewRow.DefaultCellStyle.BackColor = Color.Red;
@@ -116,8 +116,6 @@ namespace LinkRepository
         {
             viewRow.Cells.Clear();
             var row = _repository[repositoryNumber];
-            DataGridViewCell rowNumberCell = new DataGridViewTextBoxCell();
-            rowNumberCell.Value = repositoryNumber;
             DataGridViewCell indexCell = new DataGridViewTextBoxCell();
             indexCell.Value = row.Index;
             DataGridViewCell uriCell = new DataGridViewTextBoxCell();
@@ -142,7 +140,6 @@ namespace LinkRepository
             Image preview = GetPreviewImage(row.ThumbnailBytes);
             thumbnailCell.Value = preview;
 
-            viewRow.Cells.Add(rowNumberCell);
             viewRow.Cells.Add(indexCell);
             viewRow.Cells.Add(uriCell);
             viewRow.Cells.Add(genreCell);
@@ -170,17 +167,16 @@ namespace LinkRepository
             int repositoryNumber = GetRowRepositoryNumber(viewRow);
             var rowData = GetRowData(viewRow);
 
-            viewRow.Cells[0].Value = repositoryNumber;
-            viewRow.Cells[RepositoryConstants.IndexColumnIndex + 1].Value = rowData.Index;
-            viewRow.Cells[RepositoryConstants.UriColumnIndex + 1].Value = rowData.Uri;
-            viewRow.Cells[RepositoryConstants.GenreColumnIndex + 1].Value = rowData.Genre;
-            viewRow.Cells[RepositoryConstants.ScoreColumnIndex + 1].Value = rowData.Score;
-            viewRow.Cells[RepositoryConstants.CommentColumnIndex + 1].Value = rowData.Comment;
-            viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex + 1].Value = rowData.IsAvailable;
-            viewRow.Cells[RepositoryConstants.IsLoadedColumnIndex + 1].Value = rowData.IsLoaded;
-            viewRow.Cells[RepositoryConstants.CreatedColumnIndex + 1].Value = rowData.CreatedTimestamp;
-            viewRow.Cells[RepositoryConstants.ModifiedColumnIndex + 1].Value = rowData.ModifiedTimestamp;
-            viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex + 1].Value = GetPreviewImage(rowData.ThumbnailBytes);
+            viewRow.Cells[RepositoryConstants.IndexColumnIndex ].Value = rowData.Index;
+            viewRow.Cells[RepositoryConstants.UriColumnIndex ].Value = rowData.Uri;
+            viewRow.Cells[RepositoryConstants.GenreColumnIndex ].Value = rowData.Genre;
+            viewRow.Cells[RepositoryConstants.ScoreColumnIndex ].Value = rowData.Score;
+            viewRow.Cells[RepositoryConstants.CommentColumnIndex ].Value = rowData.Comment;
+            viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex ].Value = rowData.IsAvailable;
+            viewRow.Cells[RepositoryConstants.IsLoadedColumnIndex ].Value = rowData.IsLoaded;
+            viewRow.Cells[RepositoryConstants.CreatedColumnIndex ].Value = rowData.CreatedTimestamp;
+            viewRow.Cells[RepositoryConstants.ModifiedColumnIndex ].Value = rowData.ModifiedTimestamp;
+            viewRow.Cells[RepositoryConstants.ThumbnailColumnIndex ].Value = GetPreviewImage(rowData.ThumbnailBytes);
             DecorateRow(viewRow);
             if (LinkTableView.SelectedRows.Contains(viewRow))
             {
@@ -442,7 +438,7 @@ namespace LinkRepository
             ILinkTableRow rowData = GetRowData(viewRow);
             int rowNumber = GetRowRepositoryNumber(viewRow);
             DataGridViewCell cell = viewRow.Cells[e.ColumnIndex];
-            if (e.ColumnIndex == RepositoryConstants.IsAvailableColumnIndex + 1)
+            if (e.ColumnIndex == RepositoryConstants.IsAvailableColumnIndex )
             {
                 var checkboxCell = (DataGridViewCheckBoxCell)cell;
                 bool value = !(bool)checkboxCell.Value;
@@ -450,7 +446,7 @@ namespace LinkRepository
                 UpdateViewRow(viewRow);
                 _repository.Save();
             }
-            else if (e.ColumnIndex == RepositoryConstants.IsLoadedColumnIndex + 1)
+            else if (e.ColumnIndex == RepositoryConstants.IsLoadedColumnIndex )
             {
                 var checkboxCell = (DataGridViewCheckBoxCell)cell;
                 bool value = !(bool)checkboxCell.Value;

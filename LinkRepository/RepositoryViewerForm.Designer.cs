@@ -30,17 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.LinkTableView = new System.Windows.Forms.DataGridView();
-            this.LinkTableRowNumberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableIndexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableUriColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableGenreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableCommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableIsAvailableColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.LinkTableIsLoadedColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.LinkTableCreatedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableModifiedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LinkTableThumbnailColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.NewRowButton = new System.Windows.Forms.Button();
             this.UriBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -58,10 +47,20 @@
             this.ThumbnailBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.repositoryViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LinkTableIndexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableUriColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableGenreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableCommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableIsAvailableColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.LinkTableIsLoadedColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.LinkTableCreatedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableModifiedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTableThumbnailColumn = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ThumbnailBox)).BeginInit();
@@ -75,7 +74,6 @@
             this.LinkTableView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.LinkTableView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.LinkTableView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.LinkTableRowNumberColumn,
             this.LinkTableIndexColumn,
             this.LinkTableUriColumn,
             this.LinkTableGenreColumn,
@@ -95,84 +93,6 @@
             this.LinkTableView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.LinkTableView_CellContentClick);
             this.LinkTableView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.LinkTableView_ColumnHeaderMouseClick);
             this.LinkTableView.SelectionChanged += new System.EventHandler(this.LinkTableView_SelectionChanged);
-            // 
-            // LinkTableRowNumberColumn
-            // 
-            this.LinkTableRowNumberColumn.HeaderText = "#";
-            this.LinkTableRowNumberColumn.Name = "LinkTableRowNumberColumn";
-            this.LinkTableRowNumberColumn.ReadOnly = true;
-            this.LinkTableRowNumberColumn.Width = 20;
-            // 
-            // LinkTableIndexColumn
-            // 
-            this.LinkTableIndexColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.LinkTableIndexColumn.HeaderText = "Index";
-            this.LinkTableIndexColumn.Name = "LinkTableIndexColumn";
-            this.LinkTableIndexColumn.ReadOnly = true;
-            this.LinkTableIndexColumn.Width = 58;
-            // 
-            // LinkTableUriColumn
-            // 
-            this.LinkTableUriColumn.FillWeight = 10F;
-            this.LinkTableUriColumn.HeaderText = "URI";
-            this.LinkTableUriColumn.MinimumWidth = 10;
-            this.LinkTableUriColumn.Name = "LinkTableUriColumn";
-            this.LinkTableUriColumn.Width = 50;
-            // 
-            // LinkTableGenreColumn
-            // 
-            this.LinkTableGenreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LinkTableGenreColumn.FillWeight = 50F;
-            this.LinkTableGenreColumn.HeaderText = "Genre";
-            this.LinkTableGenreColumn.MinimumWidth = 50;
-            this.LinkTableGenreColumn.Name = "LinkTableGenreColumn";
-            // 
-            // LinkTableScoreColumn
-            // 
-            this.LinkTableScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.LinkTableScoreColumn.HeaderText = "Score";
-            this.LinkTableScoreColumn.Name = "LinkTableScoreColumn";
-            this.LinkTableScoreColumn.Width = 60;
-            // 
-            // LinkTableCommentColumn
-            // 
-            this.LinkTableCommentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.LinkTableCommentColumn.FillWeight = 50F;
-            this.LinkTableCommentColumn.HeaderText = "Comment";
-            this.LinkTableCommentColumn.Name = "LinkTableCommentColumn";
-            this.LinkTableCommentColumn.Width = 76;
-            // 
-            // LinkTableIsAvailableColumn
-            // 
-            this.LinkTableIsAvailableColumn.HeaderText = "Is available";
-            this.LinkTableIsAvailableColumn.Name = "LinkTableIsAvailableColumn";
-            // 
-            // LinkTableIsLoadedColumn
-            // 
-            this.LinkTableIsLoadedColumn.HeaderText = "Is loaded";
-            this.LinkTableIsLoadedColumn.Name = "LinkTableIsLoadedColumn";
-            // 
-            // LinkTableCreatedColumn
-            // 
-            this.LinkTableCreatedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.LinkTableCreatedColumn.HeaderText = "Created";
-            this.LinkTableCreatedColumn.Name = "LinkTableCreatedColumn";
-            this.LinkTableCreatedColumn.Width = 69;
-            // 
-            // LinkTableModifiedColumn
-            // 
-            this.LinkTableModifiedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.LinkTableModifiedColumn.HeaderText = "Modified";
-            this.LinkTableModifiedColumn.Name = "LinkTableModifiedColumn";
-            this.LinkTableModifiedColumn.Width = 72;
-            // 
-            // LinkTableThumbnailColumn
-            // 
-            this.LinkTableThumbnailColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.LinkTableThumbnailColumn.HeaderText = "Thumbnail";
-            this.LinkTableThumbnailColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.LinkTableThumbnailColumn.Name = "LinkTableThumbnailColumn";
-            this.LinkTableThumbnailColumn.Width = 62;
             // 
             // NewRowButton
             // 
@@ -353,33 +273,104 @@
             this.repositoryViewerToolStripMenuItem.Size = new System.Drawing.Size(112, 20);
             this.repositoryViewerToolStripMenuItem.Text = "Repository viewer";
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // preferencesToolStripMenuItem
             // 
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.preferencesToolStripMenuItem.Text = "Preferences";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
-            // 
-            // saveChangesToolStripMenuItem
-            // 
-            this.saveChangesToolStripMenuItem.Name = "saveChangesToolStripMenuItem";
-            this.saveChangesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.saveChangesToolStripMenuItem.Text = "Save changes";
-            this.saveChangesToolStripMenuItem.Click += new System.EventHandler(this.saveChangesToolStripMenuItem_Click);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
+            // 
+            // saveChangesToolStripMenuItem
+            // 
+            this.saveChangesToolStripMenuItem.Name = "saveChangesToolStripMenuItem";
+            this.saveChangesToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.saveChangesToolStripMenuItem.Text = "Save changes";
+            this.saveChangesToolStripMenuItem.Click += new System.EventHandler(this.saveChangesToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // LinkTableIndexColumn
+            // 
+            this.LinkTableIndexColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.LinkTableIndexColumn.HeaderText = "Index";
+            this.LinkTableIndexColumn.Name = "LinkTableIndexColumn";
+            this.LinkTableIndexColumn.ReadOnly = true;
+            this.LinkTableIndexColumn.Width = 58;
+            // 
+            // LinkTableUriColumn
+            // 
+            this.LinkTableUriColumn.FillWeight = 10F;
+            this.LinkTableUriColumn.HeaderText = "URI";
+            this.LinkTableUriColumn.MinimumWidth = 10;
+            this.LinkTableUriColumn.Name = "LinkTableUriColumn";
+            this.LinkTableUriColumn.Width = 50;
+            // 
+            // LinkTableGenreColumn
+            // 
+            this.LinkTableGenreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LinkTableGenreColumn.FillWeight = 50F;
+            this.LinkTableGenreColumn.HeaderText = "Genre";
+            this.LinkTableGenreColumn.MinimumWidth = 50;
+            this.LinkTableGenreColumn.Name = "LinkTableGenreColumn";
+            // 
+            // LinkTableScoreColumn
+            // 
+            this.LinkTableScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LinkTableScoreColumn.HeaderText = "Score";
+            this.LinkTableScoreColumn.Name = "LinkTableScoreColumn";
+            this.LinkTableScoreColumn.Width = 60;
+            // 
+            // LinkTableCommentColumn
+            // 
+            this.LinkTableCommentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LinkTableCommentColumn.FillWeight = 50F;
+            this.LinkTableCommentColumn.HeaderText = "Comment";
+            this.LinkTableCommentColumn.Name = "LinkTableCommentColumn";
+            this.LinkTableCommentColumn.Width = 76;
+            // 
+            // LinkTableIsAvailableColumn
+            // 
+            this.LinkTableIsAvailableColumn.HeaderText = "Is available";
+            this.LinkTableIsAvailableColumn.Name = "LinkTableIsAvailableColumn";
+            // 
+            // LinkTableIsLoadedColumn
+            // 
+            this.LinkTableIsLoadedColumn.HeaderText = "Is loaded";
+            this.LinkTableIsLoadedColumn.Name = "LinkTableIsLoadedColumn";
+            // 
+            // LinkTableCreatedColumn
+            // 
+            this.LinkTableCreatedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LinkTableCreatedColumn.HeaderText = "Created";
+            this.LinkTableCreatedColumn.Name = "LinkTableCreatedColumn";
+            this.LinkTableCreatedColumn.Width = 69;
+            // 
+            // LinkTableModifiedColumn
+            // 
+            this.LinkTableModifiedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LinkTableModifiedColumn.HeaderText = "Modified";
+            this.LinkTableModifiedColumn.Name = "LinkTableModifiedColumn";
+            this.LinkTableModifiedColumn.Width = 72;
+            // 
+            // LinkTableThumbnailColumn
+            // 
+            this.LinkTableThumbnailColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.LinkTableThumbnailColumn.HeaderText = "Thumbnail";
+            this.LinkTableThumbnailColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.LinkTableThumbnailColumn.Name = "LinkTableThumbnailColumn";
+            this.LinkTableThumbnailColumn.Width = 62;
             // 
             // RepositoryViewerForm
             // 
@@ -436,7 +427,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ContextMenuStrip LinkTableHeadersMenuStrip;
         private System.Windows.Forms.PictureBox ThumbnailBox;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableRowNumberColumn;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem repositoryViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveChangesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableIndexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableUriColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableGenreColumn;
@@ -447,12 +443,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableCreatedColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LinkTableModifiedColumn;
         private System.Windows.Forms.DataGridViewImageColumn LinkTableThumbnailColumn;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem repositoryViewerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveChangesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
     }
 }
 

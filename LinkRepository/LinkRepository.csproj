@@ -145,7 +145,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\IModificationReporter.cs" />
+    <Compile Include="Repository\Sqlite\IModificationReporter.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\LinkTableColumnAttribute.cs" />
     <Compile Include="Repository\SqliteEf\LinkTable.cs" />
