@@ -2,7 +2,7 @@
 
 namespace LinkRepository.Repository.Sqlite
 {
-    class LinkTableRow : ILinkTableRow
+    class SqliteLinkTableRow : ILinkTableRow
     {
         private bool _isModified = false;
         private bool _isNewRow = false;
@@ -21,7 +21,7 @@ namespace LinkRepository.Repository.Sqlite
         private DateTime _modifiedTimestamp;
         private byte[] _thumbnailBytes;
 
-        internal LinkTableRow(int index, bool isNewRow, DateTime createdTimestamp, IModificationReporter modificationReporter = null)
+        internal SqliteLinkTableRow(int index, bool isNewRow, DateTime createdTimestamp, IModificationReporter modificationReporter = null)
         {
             _index = index;
             _isNewRow = isNewRow;

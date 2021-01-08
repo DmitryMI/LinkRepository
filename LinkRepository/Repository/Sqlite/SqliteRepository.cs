@@ -10,8 +10,8 @@ namespace LinkRepository.Repository.Sqlite
     public class SqliteRepository : IRepository, IModificationReporter
     {
         private readonly SqliteConnection _sqliteConnection;
-        private List<LinkTableRow> _rowList;
-        private List<LinkTableRow> _removedList = new List<LinkTableRow>();
+        private List<SqliteLinkTableRow> _rowList;
+        private List<SqliteLinkTableRow> _removedList = new List<SqliteLinkTableRow>();
 
         private bool _hasUnsavedModifications = false;
         public SqliteRepository(string dbPath)
@@ -43,7 +43,7 @@ namespace LinkRepository.Repository.Sqlite
         public void Add(ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _rowList.Add((LinkTableRow)item);
+            _rowList.Add((SqliteLinkTableRow)item);
         }
 
         public void Clear()
@@ -60,14 +60,14 @@ namespace LinkRepository.Repository.Sqlite
 
         public void CopyTo(ILinkTableRow[] array, int arrayIndex)
         {
-            _rowList.CopyTo((LinkTableRow[])array, arrayIndex);
+            _rowList.CopyTo((SqliteLinkTableRow[])array, arrayIndex);
         }
 
         public bool Remove(ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _removedList.Add((LinkTableRow)item);
-            return _rowList.Remove((LinkTableRow)item);
+            _removedList.Add((SqliteLinkTableRow)item);
+            return _rowList.Remove((SqliteLinkTableRow)item);
         }
 
         public int Count => _rowList.Count;
@@ -76,13 +76,13 @@ namespace LinkRepository.Repository.Sqlite
 
         public int IndexOf(ILinkTableRow item)
         {
-            return _rowList.IndexOf((LinkTableRow)item);
+            return _rowList.IndexOf((SqliteLinkTableRow)item);
         }
 
         public void Insert(int index, ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _rowList.Insert(index, (LinkTableRow)item);
+            _rowList.Insert(index, (SqliteLinkTableRow)item);
         }
 
         public void RemoveAt(int index)
@@ -95,7 +95,7 @@ namespace LinkRepository.Repository.Sqlite
         public ILinkTableRow this[int index]
         {
             get => _rowList[index];
-            set => _rowList[index] = (LinkTableRow)value;
+            set => _rowList[index] = (SqliteLinkTableRow)value;
         }
 
         private void CreateLinkTable()
@@ -150,7 +150,7 @@ namespace LinkRepository.Repository.Sqlite
                         erroneousRowsCount++;
                     }
 
-                    LinkTableRow row = new LinkTableRow(rdr.GetInt32(0), false, createDateTime, this)
+                    SqliteLinkTableRow row = new SqliteLinkTableRow(rdr.GetInt32(0), false, createDateTime, this)
                     {
                         Uri = rdr.GetString(1),
                         Genre = rdr.GetString(2),
@@ -202,7 +202,7 @@ namespace LinkRepository.Repository.Sqlite
 
         public void Load()
         {
-            _rowList = new List<LinkTableRow>();
+            _rowList = new List<SqliteLinkTableRow>();
             CreateLinkTable();
             ReadLinkTable();
         }
@@ -266,7 +266,7 @@ namespace LinkRepository.Repository.Sqlite
             _hasUnsavedModifications = false;
         }
 
-        private int InsertRow(LinkTableRow row, SqliteCommand insertCommand)
+        private int InsertRow(SqliteLinkTableRow row, SqliteCommand insertCommand)
         {
             insertCommand.Parameters.Clear();
             insertCommand.Parameters.AddWithValue("@index", row.Index);
@@ -287,7 +287,7 @@ namespace LinkRepository.Repository.Sqlite
             return rowsModified;
         }
 
-        private int UpdateRow(LinkTableRow row, SqliteCommand updateCommand)
+        private int UpdateRow(SqliteLinkTableRow row, SqliteCommand updateCommand)
         {
             updateCommand.Parameters.Clear();
             updateCommand.Parameters.AddWithValue("@index", row.Index);
@@ -310,7 +310,7 @@ namespace LinkRepository.Repository.Sqlite
             return rowsModified;
         }
 
-        private int UpdateThumbnailBlob(LinkTableRow row)
+        private int UpdateThumbnailBlob(SqliteLinkTableRow row)
         {
             string updateCommandString =
                 $"UPDATE LinkTable\n" +
@@ -328,7 +328,7 @@ namespace LinkRepository.Repository.Sqlite
             return rowsModified;
         }
 
-        private int DeleteRow(LinkTableRow row, SqliteCommand deleteCommand)
+        private int DeleteRow(SqliteLinkTableRow row, SqliteCommand deleteCommand)
         {
             deleteCommand.Parameters.Clear();
             deleteCommand.Parameters.AddWithValue("@linkIndex", row.Index);
@@ -352,7 +352,7 @@ namespace LinkRepository.Repository.Sqlite
                 index = _rowList.Last().Index + 1;
             }
 
-            var row = new LinkTableRow(index, true, DateTime.Now,this);
+            var row = new SqliteLinkTableRow(index, true, DateTime.Now,this);
             _rowList.Add(row);
             return row;
         }
