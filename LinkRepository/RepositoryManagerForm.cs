@@ -15,7 +15,9 @@ namespace LinkRepository
         {
             if (!String.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
             {
-                ProvideRepository(_dbPath);
+                string temp = _dbPath;
+                _dbPath = null;
+                ProvideRepository(temp);
             }
             else
             {
@@ -25,8 +27,7 @@ namespace LinkRepository
 
         public void ReportRepositoryProvided()
         {
-            Close();
-            //Hide();
+            Hide();
         }
 
         public RepositoryManagerForm(string dbPath)
@@ -86,6 +87,15 @@ namespace LinkRepository
 
             string fileName = dialog.FileName;
             ProvideRepository(fileName);
+        }
+
+        private void RepositoryManagerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Hide();
+            }
         }
     }
 }

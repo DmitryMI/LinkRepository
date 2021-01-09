@@ -61,10 +61,11 @@
             this.ClientSize = new System.Drawing.Size(279, 137);
             this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.OpenButton);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "RepositoryManagerForm";
             this.Text = "RepositoryManager";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RepositoryManagerForm_FormClosing);
             this.ResumeLayout(false);
 
         }

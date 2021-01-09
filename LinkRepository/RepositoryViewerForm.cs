@@ -30,7 +30,7 @@ namespace LinkRepository
         {
             _repositoryProvider = repositoryProvider;
             InitializeComponent();
-            repositoryProvider.OnRepositoryLoadedEvent += OnRepositoryProvided;
+            _repositoryProvider.OnRepositoryLoadedEvent += OnRepositoryProvided;
         }
 
         private void OnRepositoryProvided(IRepositoryProvider provider, IRepository repository)
@@ -582,57 +582,26 @@ namespace LinkRepository
             }
         }
 
-        private void ProvideRepository(string repositoryPath)
-        {
-            IRepository repository = null;
-            bool ok = false;
-            try
-            {
-                repository = new SqliteRepository(repositoryPath);
-                repository.OpenRepository();
-                repository.Load();
-                ok = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error loading selected repository", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            if (repository != null && ok)
-            {
-                _repository = repository;
-                OnRepositoryLoaded();
-            }
-        }
-
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.CheckFileExists = true;
-            dialog.Filter = "Sqlite db (*.db)|*.db|All files (*.*)|*.*";
-            DialogResult result = dialog.ShowDialog();
-            if (result != DialogResult.OK)
+            if (_repositoryProvider == null)
             {
+                MessageBox.Show("Repository provider is unavailable", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
-
-            string fileName = dialog.FileName;
-            ProvideRepository(fileName);
+            _repositoryProvider.RequestRepository();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.CheckFileExists = false;
-            dialog.Filter = "Sqlite db (*.db)|*.db|All files (*.*)|*.*";
-            DialogResult result = dialog.ShowDialog();
-            if (result != DialogResult.OK)
+            if (_repositoryProvider == null)
             {
+                MessageBox.Show("Repository provider is unavailable", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
-
-            string fileName = dialog.FileName;
-            ProvideRepository(fileName);
+            _repositoryProvider.RequestRepository();
         }
     }
 }

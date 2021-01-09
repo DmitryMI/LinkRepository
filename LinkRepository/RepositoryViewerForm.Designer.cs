@@ -55,7 +55,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.LinkTableHeadersMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ThumbnailBox = new System.Windows.Forms.PictureBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.repositoryViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ThumbnailBox)).BeginInit();
-            this.menuStrip1.SuspendLayout();
+            this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // LinkTableView
@@ -325,15 +325,15 @@
             this.ThumbnailBox.TabStop = false;
             this.ThumbnailBox.DoubleClick += new System.EventHandler(this.ThumbnailBox_DoubleClick);
             // 
-            // menuStrip1
+            // MenuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.repositoryViewerToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1138, 24);
-            this.menuStrip1.TabIndex = 15;
-            this.menuStrip1.Text = "menuStrip1";
+            this.MenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.MenuStrip.Name = "MenuStrip";
+            this.MenuStrip.Size = new System.Drawing.Size(1138, 24);
+            this.MenuStrip.TabIndex = 15;
+            this.MenuStrip.Text = "menuStrip1";
             // 
             // repositoryViewerToolStripMenuItem
             // 
@@ -351,28 +351,28 @@
             // preferencesToolStripMenuItem
             // 
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.preferencesToolStripMenuItem.Text = "Preferences";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // saveChangesToolStripMenuItem
             // 
             this.saveChangesToolStripMenuItem.Name = "saveChangesToolStripMenuItem";
-            this.saveChangesToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.saveChangesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveChangesToolStripMenuItem.Text = "Save changes";
             this.saveChangesToolStripMenuItem.Click += new System.EventHandler(this.saveChangesToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -395,7 +395,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1138, 678);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.MenuStrip);
             this.Controls.Add(this.ThumbnailBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.ScoreBox);
@@ -411,7 +411,7 @@
             this.Controls.Add(this.UriBox);
             this.Controls.Add(this.NewRowButton);
             this.Controls.Add(this.LinkTableView);
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.MenuStrip;
             this.Name = "RepositoryViewerForm";
             this.Text = "Repository viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RepositoryViewerForm_FormClosing);
@@ -421,8 +421,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.LinkTableView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScoreBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ThumbnailBox)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.MenuStrip.ResumeLayout(false);
+            this.MenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -446,7 +446,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ContextMenuStrip LinkTableHeadersMenuStrip;
         private System.Windows.Forms.PictureBox ThumbnailBox;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem repositoryViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
