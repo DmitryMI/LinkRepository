@@ -8,6 +8,7 @@ using Microsoft.Data.Sqlite;
 
 namespace LinkRepository.Repository.Sqlite
 {
+    [Obsolete("This does not work")]
     public class SqliteEncryptedRepository : SqliteRepository
     {
         private string _password;
