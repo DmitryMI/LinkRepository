@@ -23,7 +23,8 @@ namespace LinkRepository
                 dbPath = args[0];
             }
 
-            RepositoryManagerForm repositoryManager = new RepositoryManagerForm(dbPath);
+            //PasswordInputForm passwordInputForm = new PasswordInputForm();
+            RepositoryManagerForm repositoryManager = new RepositoryManagerForm(null, dbPath);
             RepositoryViewerForm viewerForm = new RepositoryViewerForm(repositoryManager);
             Application.Run(viewerForm);
         }

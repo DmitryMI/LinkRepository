@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.OpenButton = new System.Windows.Forms.Button();
             this.CreateButton = new System.Windows.Forms.Button();
+            this.TopMostTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // OpenButton
@@ -54,18 +56,23 @@
             this.CreateButton.UseVisualStyleBackColor = true;
             this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
             // 
+            // TopMostTimer
+            // 
+            this.TopMostTimer.Enabled = true;
+            this.TopMostTimer.Interval = 200;
+            this.TopMostTimer.Tick += new System.EventHandler(this.TopMostTimer_Tick);
+            // 
             // RepositoryManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(279, 137);
+            this.ClientSize = new System.Drawing.Size(279, 133);
             this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.OpenButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "RepositoryManagerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RepositoryManager";
-            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RepositoryManagerForm_FormClosing);
             this.ResumeLayout(false);
 
@@ -75,5 +82,6 @@
 
         private System.Windows.Forms.Button OpenButton;
         private System.Windows.Forms.Button CreateButton;
+        private System.Windows.Forms.Timer TopMostTimer;
     }
 }

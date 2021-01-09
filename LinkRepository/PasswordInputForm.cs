@@ -42,6 +42,12 @@ namespace LinkRepository
         {
             MessageLabel.Text = "Wrong password";
             MessageLabel.ForeColor = Color.Red;
+            Close();
+        }
+
+        public void RequestPassword()
+        {
+            ShowDialog();
         }
     }
 }

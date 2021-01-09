@@ -9,5 +9,6 @@ namespace LinkRepository
         string Password { get; }
         void ReportCorrectPassword();
         void ReportWrongPassword();
+        void RequestPassword();
     }
 }

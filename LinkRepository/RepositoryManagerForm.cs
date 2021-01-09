@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using LinkRepository.Repository;
 using LinkRepository.Repository.Sqlite;
@@ -9,6 +10,7 @@ namespace LinkRepository
     public partial class RepositoryManagerForm : Form, IRepositoryProvider
     {
         private string _dbPath;
+        private IPasswordProvider _passwordProvider;
         public IRepository Repository { get; private set; }
         public event Action<IRepositoryProvider, IRepository> OnRepositoryLoadedEvent;
         public void RequestRepository()
@@ -27,6 +29,8 @@ namespace LinkRepository
 
         private void ShowSelf()
         {
+            TopMost = true;
+            BringToFront();
             Show();
         }
 
@@ -35,19 +39,46 @@ namespace LinkRepository
             Hide();
         }
 
-        public RepositoryManagerForm(string dbPath)
+        public RepositoryManagerForm(IPasswordProvider passwordProvider, string dbPath)
         {
+            _passwordProvider = passwordProvider;
+            if (_passwordProvider != null)
+            {
+                _passwordProvider.OnPasswordEnteredEvent += (i, p) => ProvideRepository(p);
+            }
             InitializeComponent();
             _dbPath = dbPath;
         }
 
-        private void ProvideRepository(string repositoryPath)
+        private void InvokePasswordInput()
         {
+            if (_passwordProvider != null)
+            {
+                _passwordProvider.RequestPassword();
+            }
+            else
+            {
+                ProvideRepository(null);
+            }
+        }
+
+
+        private void ProvideRepository(string password = null)
+        {
+            string repoPath = _dbPath;
+            _dbPath = null;
             IRepository repository = null;
             bool ok = false; 
             try
             {
-                repository = new SqliteRepository(repositoryPath);
+                if (password == null)
+                {
+                    repository = new SqliteRepository(repoPath);
+                }
+                else
+                {
+                    repository = new SqliteEncryptedRepository(repoPath, password);
+                }
                 repository.OpenRepository();
                 repository.Load();
                 ok = true;
@@ -60,7 +91,13 @@ namespace LinkRepository
             if (repository != null && ok)
             {
                 Repository = repository;
+                _passwordProvider?.ReportCorrectPassword();
                 OnRepositoryLoadedEvent?.Invoke(this, Repository);
+            }
+            else
+            {
+                // TODO No guarantee that password is actually wrong
+                _passwordProvider?.ReportWrongPassword();
             }
         }
 
@@ -75,8 +112,8 @@ namespace LinkRepository
                 return;
             }
 
-            string fileName = dialog.FileName;
-            ProvideRepository(fileName);
+            _dbPath = dialog.FileName;
+            InvokePasswordInput();
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
@@ -90,8 +127,8 @@ namespace LinkRepository
                 return;
             }
 
-            string fileName = dialog.FileName;
-            ProvideRepository(fileName);
+            _dbPath = dialog.FileName;
+            InvokePasswordInput();
         }
 
         private void RepositoryManagerForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -101,6 +138,12 @@ namespace LinkRepository
                 e.Cancel = true;
                 Hide();
             }
+        }
+
+        private void TopMostTimer_Tick(object sender, EventArgs e)
+        {
+            TopMost = false;
+            TopMostTimer.Stop();
         }
     }
 }
