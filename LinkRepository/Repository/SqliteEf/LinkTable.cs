@@ -7,15 +7,9 @@ namespace LinkRepository.Repository.SqliteEf
     [Table("LinkTable")]
     public class LinkTable : ILinkTableRow
     {
-        [Column("CreatedTimestamp")]
-        public DateTime CreatedTimestamp { get; }
-
-        [Column("ModifiedTimestamp")]
-        public DateTime ModifiedTimestamp { get; set; }
-
-        [Column("Index")]
+        //[Column("LinkIndex")]
         [Key]
-        public int Index { get; }
+        public int LinkIndex { get; set; }
 
         [Column("Uri")]
         public string Uri { get; set; }
@@ -35,7 +29,27 @@ namespace LinkRepository.Repository.SqliteEf
         [Column("IsLoaded")]
         public bool IsLoaded { get; set; }
 
+        [Column("CreatedTimestamp", Order = RepositoryConstants.CreatedColumnIndex, TypeName = "INTEGER")]
+        public long CreatedTimestampShadow { get; set; }
+
+        [Column("ModifiedTimestamp", Order = RepositoryConstants.ModifiedColumnIndex, TypeName = "INTEGER")]
+        public long ModifiedTimestampShadow { get; set; }
+
         [Column("ThumbnailBytes")]
         public byte[] ThumbnailBytes { get; set; }
+
+
+        public DateTime CreatedTimestamp
+        {
+            get => DateTime.FromBinary(CreatedTimestampShadow);
+            set => CreatedTimestampShadow = value.ToBinary();
+        }
+
+        public DateTime ModifiedTimestamp
+        {
+            get => DateTime.FromBinary(ModifiedTimestampShadow);
+            set => ModifiedTimestampShadow = value.ToBinary();
+        }
+
     }
 }

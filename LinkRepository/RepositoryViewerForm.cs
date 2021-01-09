@@ -112,12 +112,11 @@ namespace LinkRepository
             }
         }
 
-        private void CreateViewRow(DataGridViewRow viewRow, int repositoryNumber)
+        private void CreateViewRow(DataGridViewRow viewRow, ILinkTableRow row)
         {
             viewRow.Cells.Clear();
-            var row = _repository[repositoryNumber];
             DataGridViewCell indexCell = new DataGridViewTextBoxCell();
-            indexCell.Value = row.Index;
+            indexCell.Value = row.LinkIndex;
             DataGridViewCell uriCell = new DataGridViewTextBoxCell();
             uriCell.Value = row.Uri;
             DataGridViewCell genreCell = new DataGridViewTextBoxCell();
@@ -164,10 +163,10 @@ namespace LinkRepository
         private void UpdateViewRow(DataGridViewRow viewRow)
         {
             _ignoreFocusModeChanges = true;
-            int repositoryNumber = GetRowRepositoryNumber(viewRow);
+            //int repositoryNumber = GetRowRepositoryNumber(viewRow);
             var rowData = GetRowData(viewRow);
 
-            viewRow.Cells[RepositoryConstants.IndexColumnIndex ].Value = rowData.Index;
+            viewRow.Cells[RepositoryConstants.IndexColumnIndex ].Value = rowData.LinkIndex;
             viewRow.Cells[RepositoryConstants.UriColumnIndex ].Value = rowData.Uri;
             viewRow.Cells[RepositoryConstants.GenreColumnIndex ].Value = rowData.Genre;
             viewRow.Cells[RepositoryConstants.ScoreColumnIndex ].Value = rowData.Score;
@@ -189,10 +188,11 @@ namespace LinkRepository
         private void UpdateDataView()
         {
             LinkTableView.Rows.Clear();
-            for (var index = 0; index < _repository.Count; index++)
+            //for (var index = 0; index < _repository.Count; index++)
+            foreach (var row in _repository)
             {
                 DataGridViewRow viewRow = new DataGridViewRow();
-                CreateViewRow(viewRow, index);
+                CreateViewRow(viewRow, row);
                 LinkTableView.Rows.Add(viewRow);
             }
         }
@@ -341,7 +341,7 @@ namespace LinkRepository
         {
             var row = _repository.CreateLinkTableRow();
             UpdateDataView();
-            int repositoryIndex = row.Index;
+            int repositoryIndex = row.LinkIndex;
 
             var viewRows =
                 from DataGridViewRow tableRow in LinkTableView.Rows

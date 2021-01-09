@@ -8,7 +8,7 @@ namespace LinkRepository.Repository
 
         DateTime ModifiedTimestamp { get; set; }
 
-        int Index { get; }
+        int LinkIndex { get; }
 
         string Uri { get; set; }
 

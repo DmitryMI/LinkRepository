@@ -80,19 +80,19 @@ namespace LinkRepository.Repository.Sqlite
             {
                 return -1;
             }
-            return item.Index;
+            return item.LinkIndex;
         }
 
         public void Insert(int index, ILinkTableRow item)
         {
             _hasUnsavedModifications = true;
-            _rowList.Remove(_rowList.First(e => e.Index == index));
+            _rowList.Remove(_rowList.First(e => e.LinkIndex == index));
             _rowList.Add((SqliteLinkTableRow)item);
         }
 
         public void RemoveAt(int index)
         {
-            var item = _rowList.First(e => e.Index == index);
+            var item = _rowList.First(e => e.LinkIndex == index);
             _hasUnsavedModifications = true;
             _removedList.Add(item);
             _rowList.Remove(item);
@@ -100,7 +100,7 @@ namespace LinkRepository.Repository.Sqlite
 
         public ILinkTableRow this[int index]
         {
-            get => _rowList.First(e => e.Index == index);
+            get => _rowList.First(e => e.LinkIndex == index);
             set => Insert(index, value);
         }
 
@@ -196,7 +196,7 @@ namespace LinkRepository.Repository.Sqlite
                     }
 
                     _rowList.Add(row);
-                    Debug.WriteLine($"Row: {row.Index}, {row.IsAvailable}, {row.IsLoaded}");
+                    Debug.WriteLine($"Row: {row.LinkIndex}, {row.IsAvailable}, {row.IsLoaded}");
                 }
             }
             _sqliteConnection.Close();
@@ -275,7 +275,7 @@ namespace LinkRepository.Repository.Sqlite
         private int InsertRow(SqliteLinkTableRow row, SqliteCommand insertCommand)
         {
             insertCommand.Parameters.Clear();
-            insertCommand.Parameters.AddWithValue("@index", row.Index);
+            insertCommand.Parameters.AddWithValue("@index", row.LinkIndex);
             insertCommand.Parameters.AddWithValue("@uri", row.Uri);
             insertCommand.Parameters.AddWithValue("@genre", row.Genre);
             insertCommand.Parameters.AddWithValue("@score", row.Score);
@@ -296,7 +296,7 @@ namespace LinkRepository.Repository.Sqlite
         private int UpdateRow(SqliteLinkTableRow row, SqliteCommand updateCommand)
         {
             updateCommand.Parameters.Clear();
-            updateCommand.Parameters.AddWithValue("@index", row.Index);
+            updateCommand.Parameters.AddWithValue("@index", row.LinkIndex);
             updateCommand.Parameters.AddWithValue("@uri", row.Uri);
             updateCommand.Parameters.AddWithValue("@genre", row.Genre);
             updateCommand.Parameters.AddWithValue("@score", row.Score);
@@ -326,7 +326,7 @@ namespace LinkRepository.Repository.Sqlite
             SqliteCommand updateCommand = new SqliteCommand(updateCommandString, _sqliteConnection);
             updateCommand.Prepare();
             updateCommand.Parameters.Clear();
-            updateCommand.Parameters.AddWithValue("@index", row.Index);
+            updateCommand.Parameters.AddWithValue("@index", row.LinkIndex);
             updateCommand.Parameters.AddWithValue("@thumbnailBytes", row.ThumbnailBytes);
             int rowsModified = updateCommand.ExecuteNonQuery();
             updateCommand.Dispose();
@@ -337,7 +337,7 @@ namespace LinkRepository.Repository.Sqlite
         private int DeleteRow(SqliteLinkTableRow row, SqliteCommand deleteCommand)
         {
             deleteCommand.Parameters.Clear();
-            deleteCommand.Parameters.AddWithValue("@linkIndex", row.Index);
+            deleteCommand.Parameters.AddWithValue("@linkIndex", row.LinkIndex);
             deleteCommand.Prepare();
             int rowsModified = deleteCommand.ExecuteNonQuery();
             return rowsModified;
@@ -355,7 +355,7 @@ namespace LinkRepository.Repository.Sqlite
             int index = 0;
             if (_rowList.Count != 0)
             {
-                index = _rowList.Last().Index + 1;
+                index = _rowList.Last().LinkIndex + 1;
             }
 
             var row = new SqliteLinkTableRow(index, true, DateTime.Now,this);

@@ -62,7 +62,7 @@ namespace LinkRepository.Repository.Sqlite
 
         public bool IsModified => _isModified;
 
-        public int Index
+        public int LinkIndex
         {
             get => _index;
         }

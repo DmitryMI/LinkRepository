@@ -21,8 +21,8 @@ namespace LinkRepository
             if (args.Length != 0)
             {
                 string dbPath = args[0];
-                //IRepository repository = new SqliteRepository(dbPath);
-                IRepository repository = new SqliteDbContext(dbPath);
+                IRepository repository = new SqliteRepository(dbPath);
+                //IRepository repository = new SqliteDbContext(dbPath);
                 repository.Load();
                 startingForm = new RepositoryViewerForm(repository);
             }

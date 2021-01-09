@@ -20,18 +20,20 @@ namespace LinkRepository.Repository.SqliteEf
                     {DataSource = dbPath, ForeignKeys = true}.ConnectionString
             }, true)
         {
+            
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<LinkTable>().Property(t => t.CreatedTimestampShadow).HasColumnName("CreatedTimestamp");
         }
 
-        public DbSet<LinkTable> LinkTableRows { get; set; }
+        public DbSet<LinkTable> LinkTables { get; set; }
         public IEnumerator<ILinkTableRow> GetEnumerator()
         {
-            return LinkTableRows.AsEnumerable().GetEnumerator();
+            return LinkTables.AsEnumerable().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -45,25 +47,25 @@ namespace LinkRepository.Repository.SqliteEf
             {
                 return;
             }
-            LinkTableRows.Add((LinkTable) item);
+            LinkTables.Add((LinkTable) item);
         }
 
         public void Clear()
         {
-            for (int i = 0; i < LinkTableRows.Count(); i++)
+            for (int i = 0; i < LinkTables.Count(); i++)
             {
-                LinkTableRows.Remove(LinkTableRows.First());
+                LinkTables.Remove(LinkTables.First());
             }
         }
 
         public bool Contains(ILinkTableRow item)
         {
-            return LinkTableRows.Contains(item);
+            return LinkTables.Contains(item);
         }
 
         public void CopyTo(ILinkTableRow[] array, int arrayIndex)
         {
-            LinkTable[] rowArray = LinkTableRows.ToArray();
+            LinkTable[] rowArray = LinkTables.ToArray();
             Array.Copy(rowArray, 0, array, 0, rowArray.Length);
         }
 
@@ -73,11 +75,11 @@ namespace LinkRepository.Repository.SqliteEf
             {
                 return false;
             }
-            LinkTableRows.Remove((LinkTable) item);
+            LinkTables.Remove((LinkTable) item);
             return true;
         }
 
-        public int Count => LinkTableRows.Count();
+        public int Count => LinkTables.Count();
         public bool IsReadOnly => false;
         public int IndexOf(ILinkTableRow item)
         {
@@ -90,22 +92,22 @@ namespace LinkRepository.Repository.SqliteEf
             {
                 return;
             }
-            LinkTableRows.Add((LinkTable)item);
+            LinkTables.Add((LinkTable)item);
         }
 
         public void RemoveAt(int index)
         {
-            var element = LinkTableRows.Where(e => e.Index == index);
-            LinkTableRows.Remove(element.First());
+            var element = LinkTables.Where(e => e.LinkIndex == index);
+            LinkTables.Remove(element.First());
         }
 
         public ILinkTableRow this[int index]
         {
-            get => LinkTableRows.First(e => e.Index == index);
+            get => LinkTables.First(e => e.LinkIndex == index);
             set
             {
                 RemoveAt(index);
-                LinkTableRows.Add((LinkTable)value);
+                LinkTables.Add((LinkTable)value);
             }
         }
 
@@ -122,7 +124,7 @@ namespace LinkRepository.Repository.SqliteEf
         public bool HasUnsavedChanges => ChangeTracker.HasChanges();
         public ILinkTableRow CreateLinkTableRow()
         {
-            return LinkTableRows.Create();
+            return LinkTables.Create();
         }
     }
 }
