@@ -17,9 +17,7 @@ namespace LinkRepository
         {
             if (!String.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
             {
-                string temp = _dbPath;
-                _dbPath = null;
-                ProvideRepository(temp);
+                ProvideRepository();
             }
             else
             {
