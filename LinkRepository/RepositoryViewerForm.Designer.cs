@@ -91,6 +91,7 @@
             this.LinkTableView.Size = new System.Drawing.Size(829, 637);
             this.LinkTableView.TabIndex = 0;
             this.LinkTableView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.LinkTableView_CellContentClick);
+            this.LinkTableView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.LinkTableView_CellDoubleClick);
             this.LinkTableView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.LinkTableView_ColumnHeaderMouseClick);
             this.LinkTableView.SelectionChanged += new System.EventHandler(this.LinkTableView_SelectionChanged);
             // 
@@ -114,7 +115,6 @@
             this.UriBox.Size = new System.Drawing.Size(281, 60);
             this.UriBox.TabIndex = 2;
             this.UriBox.TextChanged += new System.EventHandler(this.FocusModeValuesChanged);
-            this.UriBox.DoubleClick += new System.EventHandler(this.UriBox_DoubleClick);
             // 
             // label1
             // 

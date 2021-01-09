@@ -504,7 +504,6 @@ namespace LinkRepository
                 {
                     case DialogResult.Cancel:
                         return;
-                        break;
                     case DialogResult.Yes:
                         _repository.Save();
                         break;
@@ -536,6 +535,22 @@ namespace LinkRepository
             _preferences.PreferencesChangedEvent += PreferencesChangedEvent;
             preferencesEditor.ShowDialog();
             _preferences.PreferencesChangedEvent -= PreferencesChangedEvent;
+        }
+
+        private void LinkTableView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+            {
+                return;
+            }
+            DataGridViewRow viewRow = LinkTableView.Rows[e.RowIndex];
+            DataGridViewCell cell = viewRow.Cells[e.ColumnIndex];
+            if (e.ColumnIndex == RepositoryConstants.UriColumnIndex)
+            {
+                var uriCell = (DataGridViewTextBoxCell)cell;
+                string uri = (String)uriCell.Value;
+                Clipboard.SetText(uri);
+            }
         }
     }
 }
