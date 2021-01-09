@@ -54,7 +54,7 @@
             this.CreateButton.UseVisualStyleBackColor = true;
             this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
             // 
-            // RepositoryManager
+            // RepositoryManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -62,8 +62,9 @@
             this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.OpenButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "RepositoryManager";
+            this.Name = "RepositoryManagerForm";
             this.Text = "RepositoryManager";
+            this.TopMost = true;
             this.ResumeLayout(false);
 
         }

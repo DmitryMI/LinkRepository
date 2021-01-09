@@ -12,6 +12,7 @@ namespace LinkRepository.Repository
         bool HasUnsavedChanges { get; }
         ILinkTableRow CreateLinkTableRow();
 
+        void OpenRepository();
 
     }
 }

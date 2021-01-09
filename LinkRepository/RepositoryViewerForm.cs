@@ -13,14 +13,35 @@ namespace LinkRepository
 {
     public partial class RepositoryViewerForm : Form
     {
-        private readonly IRepository _repository;
+        private IRepository _repository;
+        private IRepositoryProvider _repositoryProvider;
         private PreferencesContainer _preferences;
         private bool _ignoreFocusModeChanges = true;
+
         public RepositoryViewerForm(IRepository repository)
         {
             InitializeComponent();
             _repository = repository;
             _repository.Load();
+            OnRepositoryLoaded();
+        }
+
+        public RepositoryViewerForm(IRepositoryProvider repositoryProvider)
+        {
+            _repositoryProvider = repositoryProvider;
+            InitializeComponent();
+            repositoryProvider.OnRepositoryLoadedEvent += OnRepositoryProvided;
+        }
+
+        private void OnRepositoryProvided(IRepositoryProvider provider, IRepository repository)
+        {
+            _repository = repository;
+            _repositoryProvider.ReportRepositoryProvided();
+            OnRepositoryLoaded();
+        }
+
+        private void OnRepositoryLoaded()
+        {
             ExitFocusMode();
             UpdateDataView();
             LoadPreferences();
@@ -345,7 +366,7 @@ namespace LinkRepository
 
             var viewRows =
                 from DataGridViewRow tableRow in LinkTableView.Rows
-                where (int)tableRow.Cells[1].Value == repositoryIndex
+                where (int)tableRow.Cells[RepositoryConstants.IndexColumnIndex].Value == repositoryIndex
                 select tableRow;
 
             var newViewRow = viewRows.First();
@@ -551,6 +572,67 @@ namespace LinkRepository
                 string uri = (String)uriCell.Value;
                 Clipboard.SetText(uri);
             }
+        }
+
+        private void RepositoryViewerForm_Load(object sender, EventArgs e)
+        {
+            if (_repository == null && _repositoryProvider != null)
+            {
+                _repositoryProvider.RequestRepository();
+            }
+        }
+
+        private void ProvideRepository(string repositoryPath)
+        {
+            IRepository repository = null;
+            bool ok = false;
+            try
+            {
+                repository = new SqliteRepository(repositoryPath);
+                repository.OpenRepository();
+                repository.Load();
+                ok = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error loading selected repository", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            if (repository != null && ok)
+            {
+                _repository = repository;
+                OnRepositoryLoaded();
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.CheckFileExists = true;
+            dialog.Filter = "Sqlite db (*.db)|*.db|All files (*.*)|*.*";
+            DialogResult result = dialog.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            string fileName = dialog.FileName;
+            ProvideRepository(fileName);
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.CheckFileExists = false;
+            dialog.Filter = "Sqlite db (*.db)|*.db|All files (*.*)|*.*";
+            DialogResult result = dialog.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            string fileName = dialog.FileName;
+            ProvideRepository(fileName);
         }
     }
 }

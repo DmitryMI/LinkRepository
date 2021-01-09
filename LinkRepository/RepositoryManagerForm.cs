@@ -1,29 +1,48 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using LinkRepository.Repository;
 using LinkRepository.Repository.Sqlite;
 
 namespace LinkRepository
 {
-    public partial class RepositoryManagerForm : Form
+    public partial class RepositoryManagerForm : Form, IRepositoryProvider
     {
-        public RepositoryManagerForm()
+        private string _dbPath;
+        public IRepository Repository { get; private set; }
+        public event Action<IRepositoryProvider, IRepository> OnRepositoryLoadedEvent;
+        public void RequestRepository()
         {
-            InitializeComponent();
+            if (!String.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
+            {
+                ProvideRepository(_dbPath);
+            }
+            else
+            {
+                Show();
+            }
         }
 
-        private void OnRepositoryViewerClosed(object sender, EventArgs args)
+        public void ReportRepositoryProvided()
         {
             Close();
+            //Hide();
         }
 
-        private void InvokeRepositoryViewer(string repositoryPath)
+        public RepositoryManagerForm(string dbPath)
+        {
+            InitializeComponent();
+            _dbPath = dbPath;
+        }
+
+        private void ProvideRepository(string repositoryPath)
         {
             IRepository repository = null;
             bool ok = false; 
             try
             {
                 repository = new SqliteRepository(repositoryPath);
+                repository.OpenRepository();
                 repository.Load();
                 ok = true;
             }
@@ -32,12 +51,10 @@ namespace LinkRepository
                 MessageBox.Show(ex.Message, "Error loading selected repository", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            if (repository != null && ok == true)
+            if (repository != null && ok)
             {
-                this.Hide();
-                RepositoryViewerForm viewer = new RepositoryViewerForm(repository);
-                viewer.Closed += OnRepositoryViewerClosed;
-                viewer.Show();
+                Repository = repository;
+                OnRepositoryLoadedEvent?.Invoke(this, Repository);
             }
         }
 
@@ -53,7 +70,7 @@ namespace LinkRepository
             }
 
             string fileName = dialog.FileName;
-            InvokeRepositoryViewer(fileName);
+            ProvideRepository(fileName);
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
@@ -68,7 +85,7 @@ namespace LinkRepository
             }
 
             string fileName = dialog.FileName;
-            InvokeRepositoryViewer(fileName);
+            ProvideRepository(fileName);
         }
     }
 }

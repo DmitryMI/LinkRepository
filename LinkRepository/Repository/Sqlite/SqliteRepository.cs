@@ -9,25 +9,31 @@ namespace LinkRepository.Repository.Sqlite
 {
     public class SqliteRepository : IRepository, IModificationReporter
     {
-        private readonly SqliteConnection _sqliteConnection;
+        protected SqliteConnection SqliteConnection;
         private List<SqliteLinkTableRow> _rowList;
         private List<SqliteLinkTableRow> _removedList = new List<SqliteLinkTableRow>();
+        protected string DbPath;
 
         private bool _hasUnsavedModifications = false;
         public SqliteRepository(string dbPath)
-        {            
+        {
+            DbPath = dbPath;
+        }
+
+        public virtual void OpenRepository()
+        {
             var csBuilder = new SqliteConnectionStringBuilder();
-            csBuilder.DataSource = dbPath;
+            csBuilder.DataSource = DbPath;
             csBuilder.Mode = SqliteOpenMode.ReadWriteCreate;
             string cs = csBuilder.ToString();
-            _sqliteConnection = new SqliteConnection(cs);
+            SqliteConnection = new SqliteConnection(cs);
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_dynamic_cdecl());
         }
 
         public void Dispose()
         {
-            _sqliteConnection.Close();
-            _sqliteConnection.Dispose();
+            SqliteConnection.Close();
+            SqliteConnection.Dispose();
         }
 
         public IEnumerator<ILinkTableRow> GetEnumerator()
@@ -123,20 +129,20 @@ namespace LinkRepository.Repository.Sqlite
             
             //string cmdString =
             //    "CREATE TABLE IF NOT EXISTS LinkTable (\r\n\tIndex INTEGER PRIMARY KEY,\r\n\tfirst_name TEXT NOT NULL,\r\n\tlast_name TEXT NOT NULL,\r\n\temail TEXT NOT NULL UNIQUE,\r\n\tphone TEXT NOT NULL UNIQUE\r\n);";
-            _sqliteConnection.Open();
-            using (var cmd = new SqliteCommand(cmdString, _sqliteConnection))
+            SqliteConnection.Open();
+            using (var cmd = new SqliteCommand(cmdString, SqliteConnection))
             {
                 cmd.ExecuteNonQuery();
             }
-            _sqliteConnection.Close();
+            SqliteConnection.Close();
         }
 
         private void ReadLinkTable()
         {
             // TODO Replace with strict SELECT
             string stm = "SELECT * FROM LinkTable";
-            _sqliteConnection.Open();
-            var cmd = new SqliteCommand(stm, _sqliteConnection);
+            SqliteConnection.Open();
+            var cmd = new SqliteCommand(stm, SqliteConnection);
             int erroneousRowsCount = 0;
             using (SqliteDataReader rdr = cmd.ExecuteReader())
             {
@@ -199,7 +205,7 @@ namespace LinkRepository.Repository.Sqlite
                     Debug.WriteLine($"Row: {row.LinkIndex}, {row.IsAvailable}, {row.IsLoaded}");
                 }
             }
-            _sqliteConnection.Close();
+            SqliteConnection.Close();
             if (erroneousRowsCount == 0)
             {
                 _hasUnsavedModifications = false;
@@ -215,11 +221,11 @@ namespace LinkRepository.Repository.Sqlite
 
         public void Save()
         {
-            _sqliteConnection.Open();
+            SqliteConnection.Open();
             int rowsModified = 0;
             string deleteCommandString = "DELETE FROM LinkTable\r\nWHERE LinkIndex = @linkIndex;";
             
-            using (SqliteCommand command = new SqliteCommand(deleteCommandString, _sqliteConnection))
+            using (SqliteCommand command = new SqliteCommand(deleteCommandString, SqliteConnection))
             {
                 foreach (var removedRow in _removedList)
                 {
@@ -231,7 +237,7 @@ namespace LinkRepository.Repository.Sqlite
             string insertCommandString =
                 $"INSERT INTO LinkTable(LinkIndex, Uri, Genre, Score, Comment, IsAvailable, IsLoaded, ThumbnailBytes, CreatedTimestamp, ModifiedTimestamp)" +
                 $"VALUES(@index, @uri, @genre, @score, @comment, @isAvailable, @isLoaded, @thumbnailBytes, @createdTimestamp, @modifiedTimestamp)";
-            SqliteCommand insertCommand = new SqliteCommand(insertCommandString, _sqliteConnection);
+            SqliteCommand insertCommand = new SqliteCommand(insertCommandString, SqliteConnection);
 
             string updateCommandString =
                 $"UPDATE LinkTable\n" +
@@ -245,7 +251,7 @@ namespace LinkRepository.Repository.Sqlite
                 $"CreatedTimestamp = @createdTimestamp,\n" +
                 $"ModifiedTimestamp = @modifiedTimestamp\n" +
                 $"WHERE LinkIndex = @index";
-            SqliteCommand updateCommand = new SqliteCommand(updateCommandString, _sqliteConnection);
+            SqliteCommand updateCommand = new SqliteCommand(updateCommandString, SqliteConnection);
 
             foreach (var row in _rowList)
             {
@@ -268,7 +274,7 @@ namespace LinkRepository.Repository.Sqlite
             updateCommand.Dispose();
 
             Debug.WriteLine($"Rows modified: {rowsModified}");
-            _sqliteConnection.Close();
+            SqliteConnection.Close();
             _hasUnsavedModifications = false;
         }
 
@@ -323,7 +329,7 @@ namespace LinkRepository.Repository.Sqlite
                 "SET\n" +
                 $"ThumbnailBytes = @thumbnailBytes\n" +
                 $"WHERE LinkIndex = @index";
-            SqliteCommand updateCommand = new SqliteCommand(updateCommandString, _sqliteConnection);
+            SqliteCommand updateCommand = new SqliteCommand(updateCommandString, SqliteConnection);
             updateCommand.Prepare();
             updateCommand.Parameters.Clear();
             updateCommand.Parameters.AddWithValue("@index", row.LinkIndex);

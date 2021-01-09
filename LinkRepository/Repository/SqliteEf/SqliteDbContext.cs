@@ -126,5 +126,10 @@ namespace LinkRepository.Repository.SqliteEf
         {
             return LinkTables.Create();
         }
+
+        public void OpenRepository()
+        {
+            
+        }
     }
 }

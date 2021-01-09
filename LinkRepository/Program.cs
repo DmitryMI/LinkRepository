@@ -16,23 +16,16 @@ namespace LinkRepository
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            Form startingForm;
+            string dbPath = null;
+            
             if (args.Length != 0)
             {
-                string dbPath = args[0];
-                IRepository repository = new SqliteRepository(dbPath);
-                //IRepository repository = new SqliteDbContext(dbPath);
-                repository.Load();
-                startingForm = new RepositoryViewerForm(repository);
-            }
-            else
-            {
-                startingForm = new RepositoryManagerForm();
+                dbPath = args[0];
             }
 
-
-            Application.Run(startingForm);
+            RepositoryManagerForm repositoryManager = new RepositoryManagerForm(dbPath);
+            RepositoryViewerForm viewerForm = new RepositoryViewerForm(repositoryManager);
+            Application.Run(viewerForm);
         }
     }
 }

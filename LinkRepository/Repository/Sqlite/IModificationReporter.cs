@@ -1,4 +1,4 @@
-﻿namespace LinkRepository.Repository
+﻿namespace LinkRepository.Repository.Sqlite
 {
     public interface IModificationReporter
     {
