@@ -21,8 +21,13 @@ namespace LinkRepository
             }
             else
             {
-                Show();
+                ShowSelf();
             }
+        }
+
+        private void ShowSelf()
+        {
+            Show();
         }
 
         public void ReportRepositoryProvided()
