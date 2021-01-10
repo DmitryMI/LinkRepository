@@ -10,12 +10,12 @@ namespace LinkRepository
     public partial class RepositoryManagerForm : Form, IRepositoryProvider
     {
         private string _dbPath;
-        private IPasswordProvider _passwordProvider;
+        private readonly IPasswordProvider _passwordProvider;
         public IRepository Repository { get; private set; }
         public event Action<IRepositoryProvider, IRepository> OnRepositoryLoadedEvent;
         public void RequestRepository()
         {
-            if (!String.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
+            if (!string.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
             {
                 ProvideRepository();
             }
@@ -75,7 +75,8 @@ namespace LinkRepository
                 }
                 else
                 {
-                    repository = new SqliteEncryptedRepository(repoPath, password);
+                    throw new NotImplementedException();
+                    //repository = new SqliteEncryptedRepository(repoPath, password);
                 }
                 repository.OpenRepository();
                 repository.Load();
@@ -103,7 +104,7 @@ namespace LinkRepository
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
-            dialog.Filter = "Sqlite db (*.db)|*.db|All files (*.*)|*.*";
+            dialog.Filter = @"Sqlite db (*.db)|*.db|All files (*.*)|*.*";
             DialogResult result = dialog.ShowDialog();
             if (result != DialogResult.OK)
             {
@@ -118,7 +119,7 @@ namespace LinkRepository
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.CheckFileExists = false;
-            dialog.Filter = "Sqlite db (*.db)|*.db|All files (*.*)|*.*";
+            dialog.Filter = @"Sqlite db (*.db)|*.db|All files (*.*)|*.*";
             DialogResult result = dialog.ShowDialog();
             if (result != DialogResult.OK)
             {
