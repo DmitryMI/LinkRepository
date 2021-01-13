@@ -222,6 +222,7 @@ namespace LinkRepository
         {
             int rowNumber = (int)viewRow.Cells[0].Value;
             _repository.RemoveAt(rowNumber);
+            LinkTableView.Rows.Remove(viewRow);
         }
 
         private void DeleteRows(IEnumerable<DataGridViewRow> viewRows)
@@ -239,7 +240,7 @@ namespace LinkRepository
             {
                 DeleteRow(row);
             }
-            UpdateDataView();
+            //UpdateDataView();
         }
 
         private ILinkTableRow GetRowData(DataGridViewRow viewRow)
