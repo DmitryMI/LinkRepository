@@ -362,17 +362,13 @@ namespace LinkRepository
         private void NewRowButton_Click(object sender, EventArgs e)
         {
             var row = _repository.CreateLinkTableRow();
-            UpdateDataView();
-            int repositoryIndex = row.LinkIndex;
 
-            var viewRows =
-                from DataGridViewRow tableRow in LinkTableView.Rows
-                where (int)tableRow.Cells[RepositoryConstants.IndexColumnIndex].Value == repositoryIndex
-                select tableRow;
+            DataGridViewRow viewRow = new DataGridViewRow();
+            CreateViewRow(viewRow, row);
+            LinkTableView.Rows.Add(viewRow);
 
-            var newViewRow = viewRows.First();
             LinkTableView.ClearSelection();
-            newViewRow.Selected = true;
+            viewRow.Selected = true;
             LinkTableView.FirstDisplayedScrollingRowIndex = LinkTableView.SelectedRows[0].Index;
         }
 
