@@ -25,11 +25,13 @@ namespace LinkRepository
         private void UpdateUi()
         {
             LinkTableFontSizeBox.Value = (decimal)_preferencesContainer.LinkTableFontSize;
+            ThumbnailMaxHeightBox.Value = _preferencesContainer.ThumbnailMaxHeight;
         }
 
         private void StoreUi()
         {
             _preferencesContainer.LinkTableFontSize = (float)LinkTableFontSizeBox.Value;
+            _preferencesContainer.ThumbnailMaxHeight = (int)ThumbnailMaxHeightBox.Value;
         }
 
         private void LinkTableFontSizeBox_ValueChanged(object sender, EventArgs e)

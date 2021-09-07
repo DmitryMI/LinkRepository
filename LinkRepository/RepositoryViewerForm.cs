@@ -126,10 +126,14 @@ namespace LinkRepository
 
         private void DecorateRow(DataGridViewRow viewRow)
         {
-            bool isAvailable = (bool) viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex ].Value;
+            bool isAvailable = (bool) viewRow.Cells[RepositoryConstants.IsAvailableColumnIndex].Value;
             if (!isAvailable)
             {
                 viewRow.DefaultCellStyle.BackColor = Color.Red;
+            }
+            else
+            {
+                viewRow.DefaultCellStyle.BackColor = Color.White;
             }
         }
 
@@ -482,7 +486,15 @@ namespace LinkRepository
             }
             if (Clipboard.ContainsImage())
             {
-                ThumbnailBox.Image = Clipboard.GetImage();
+                Image image = Clipboard.GetImage();               
+                if (image.Height > _preferences.ThumbnailMaxHeight)
+                {
+                    double aspectRatio = (double)image.Width / image.Height;
+                    int targetWidth = (int)(_preferences.ThumbnailMaxHeight * aspectRatio);
+                    image = ImageUtils.ResizeImage(image, targetWidth, _preferences.ThumbnailMaxHeight);
+                }
+                
+                ThumbnailBox.Image = image;
                 SaveChangesToRow(LinkTableView.SelectedRows[0]);
                 UpdateViewRow(LinkTableView.SelectedRows[0]);
             }
@@ -599,6 +611,39 @@ namespace LinkRepository
                 return;
             }
             _repositoryProvider.RequestRepository();
+        }
+
+        private void shrinkAllImagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach(DataGridViewRow row in LinkTableView.Rows)
+            {
+                int rowNumber = (int)row.Cells[0].Value;
+                DataGridViewImageCell imageCell = (DataGridViewImageCell)row.Cells["LinkTableThumbnailColumn"];
+                               
+                ILinkTableRow linkTableRow = _repository[rowNumber];
+                if (linkTableRow.ThumbnailBytes == null)
+                {
+                    continue;
+                }
+                Image image = ImageUtils.ImageFromBytes(linkTableRow.ThumbnailBytes);
+                if (image == null)
+                {
+                    continue;
+                }
+
+                if (image.Height > _preferences.ThumbnailMaxHeight)
+                {
+                    double aspectRatio = (double)image.Width / image.Height;
+                    int targetWidth = (int)(_preferences.ThumbnailMaxHeight * aspectRatio);
+                    //image = ImageUtils.ShrinkImage(image, new Size(targetWidth, _preferences.ThumbnailMaxHeight));
+                    image = ImageUtils.ResizeImage(image, targetWidth, _preferences.ThumbnailMaxHeight);
+                    imageCell.Value = image;
+                    linkTableRow.ThumbnailBytes = ImageUtils.ImageToBytes(image);
+                }
+            }
+
+            _repository.Save();
+            UpdateDataView();
         }
     }
 }

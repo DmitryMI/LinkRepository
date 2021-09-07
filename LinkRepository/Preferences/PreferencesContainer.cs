@@ -18,6 +18,8 @@ namespace LinkRepository.Preferences
 
         [SerializableField]
         private float _linkTableFontSize = 10;
+        [SerializableField]
+        private int _thumbnailMaxHeight = 320;
 
         public float LinkTableFontSize
         {
@@ -38,6 +40,8 @@ namespace LinkRepository.Preferences
                 PreferencesChangedEvent?.Invoke(this);
             }
         }
+
+        public int ThumbnailMaxHeight { get => _thumbnailMaxHeight; set => _thumbnailMaxHeight = value; }
 
         public event Action<PreferencesContainer> PreferencesChangedEvent;
 

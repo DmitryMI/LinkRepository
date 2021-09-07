@@ -31,7 +31,8 @@ namespace LinkRepository.Utils
             ms.Close();
             ms.Dispose();
             return image;
-        }
+        }        
+
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
             if (image == null)
