@@ -85,21 +85,27 @@ namespace LinkRepository
 
         private void SaveColumnsToPreferences()
         {
-            var list = new List<string>();
-            foreach (DataGridViewColumn column in LinkTableView.Columns)
+            if (_preferences != null)
             {
-                if (column.Visible)
+                var list = new List<string>();
+                foreach (DataGridViewColumn column in LinkTableView.Columns)
                 {
-                    list.Add(column.Name);
+                    if (column.Visible)
+                    {
+                        list.Add(column.Name);
+                    }
                 }
-            }
 
-            _preferences.VisibleColumns = list.ToArray();
+                _preferences.VisibleColumns = list.ToArray();
+            }
         }
 
         private void SaveTableFontSizeToPreferences()
         {
-            _preferences.LinkTableFontSize = LinkTableView.Font.Size;
+            if (_preferences != null)
+            {
+                _preferences.LinkTableFontSize = LinkTableView.Font.Size;
+            }
         }
 
         private void LoadPreferences()
@@ -114,9 +120,12 @@ namespace LinkRepository
 
         private void SavePreferences()
         {
-            SaveColumnsToPreferences();
-            SaveTableFontSizeToPreferences();
-            _preferences.Serialize();
+            if (_preferences != null)
+            {
+                SaveColumnsToPreferences();
+                SaveTableFontSizeToPreferences();
+                _preferences.Serialize();
+            }
         }
 
         private int GetRowRepositoryNumber(DataGridViewRow viewRow)
@@ -341,7 +350,7 @@ namespace LinkRepository
 
         private void RepositoryViewerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_repository.HasUnsavedChanges)
+            if (_repository != null && _repository.HasUnsavedChanges)
             {
                 DialogResult result = MessageBox.Show("Save changes?", "Exiting", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1);
